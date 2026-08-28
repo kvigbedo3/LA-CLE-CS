@@ -542,7 +542,7 @@
   }
   .pm-desc {
     font-size: 0.85rem; color: var(--text-muted); line-height: 1.45; margin-bottom: 14px;
-    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
   }
   .pm-qty-row {
     display: flex; align-items: center; justify-content: space-between;
@@ -604,7 +604,15 @@
     .pm-img-wrap .placeholder { height: min(130px, 20vh); }
     .pm-name { font-size: 1.05rem; margin-bottom: 3px; }
     .pm-price { font-size: 1.05rem; margin-bottom: 6px; }
-    .pm-desc { font-size: 0.78rem; margin-bottom: 10px; -webkit-line-clamp: 2; }
+    .pm-desc {
+   font-size: 0.78rem;
+   margin-bottom: 10px;
+   display: -webkit-box;
+   -webkit-line-clamp: 2;
+   line-clamp: 2;
+   -webkit-box-orient: vertical;
+   overflow: hidden;
+   }
     .pm-qty-row { padding: 7px 12px; margin-bottom: 9px; }
     .pm-actions { gap: 6px; }
     .pm-actions .btn-primary { padding: 11px; font-size: 0.88rem; }
