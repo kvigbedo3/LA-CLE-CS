@@ -961,6 +961,23 @@
   }
   .admin-link:hover { opacity: 1; color: var(--gold); }
 
+  .social-links {
+    display: flex; justify-content: center; gap: 14px;
+    margin: 18px 0 6px;
+  }
+  .social-links a {
+    width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: #1c1c1c; border: 1px solid #333;
+    transition: transform 0.2s, border-color 0.2s, background 0.2s;
+  }
+  .social-links a:hover { transform: translateY(-3px); }
+  .social-links svg { width: 20px; height: 20px; }
+  .social-whatsapp { background: #25D366; border-color: #25D366; }
+  .social-whatsapp:hover { background: #1ebe5a; border-color: #1ebe5a; }
+  .social-tiktok { background: #000000; border-color: #000000; }
+  .social-tiktok:hover { background: #1a1a1a; border-color: #333; }
+
   @media (max-width: 850px) {
     .home-gallery { grid-template-columns: repeat(2, 1fr); }
     .about-gallery { grid-template-columns: repeat(2, 1fr); }
@@ -1032,6 +1049,25 @@
   #admin-login-error {
     display: none; color: var(--danger); font-size: 0.85rem; margin-bottom: 12px;
   }
+
+  .legal-page { padding: 60px 5% 70px; max-width: 850px; margin: auto; }
+  .legal-page h2 {
+    font-family: 'Playfair Display', serif; color: var(--gold);
+    font-size: 2rem; margin-bottom: 6px;
+  }
+  .legal-page .legal-updated { color: var(--text-muted); font-size: 0.8rem; margin-bottom: 30px; }
+  .legal-page h3 {
+    color: var(--gold-light); font-size: 1.1rem; margin: 28px 0 10px;
+    font-family: 'Playfair Display', serif;
+  }
+  .legal-page p, .legal-page li { color: #ccc; line-height: 1.75; font-size: 0.94rem; margin-bottom: 10px; }
+  .legal-page ul { padding-left: 20px; margin-bottom: 10px; }
+  .legal-page strong { color: var(--light); }
+  .legal-back {
+    display: inline-block; margin-top: 30px;
+    color: var(--gold); text-decoration: none; font-weight: 600; font-size: 0.9rem;
+  }
+  .legal-back:hover { color: var(--gold-light); }
 
 </style>
 </head>
@@ -1236,12 +1272,107 @@
   © 2026 LA CLE CS — Boutique de commerce générale. Tous droits réservés.
   Designed by Emmanuel VIGBEDO !
   <br/>
+  📍 Zossimé, Lomé-Togo
+  <br/>
   <a href="https://wa.me/22870163374" target="_blank">
     Téléphone / WhatsApp : <strong style="color:var(--gold)">+228 70 16 33 74</strong>
   </a>
+
+  <div class="social-links">
+    <a class="social-whatsapp" href="https://wa.me/22870163374" target="_blank" rel="noopener" aria-label="WhatsApp LA CLE CS">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.6 6.32A7.85 7.85 0 0 0 12.05 4a7.94 7.94 0 0 0-6.87 11.93L4 20l4.2-1.1a7.9 7.9 0 0 0 3.85 1h.01a7.94 7.94 0 0 0 5.54-13.58ZM12.06 18.4h-.01a6.5 6.5 0 0 1-3.32-.91l-.24-.14-2.5.65.66-2.43-.16-.25a6.55 6.55 0 0 1 10.2-8.11 6.5 6.5 0 0 1-4.63 11.19Zm3.6-4.9c-.2-.1-1.17-.58-1.35-.64-.18-.07-.31-.1-.44.1-.13.2-.5.64-.62.77-.11.13-.23.15-.42.05a5.4 5.4 0 0 1-1.59-.98 6 6 0 0 1-1.1-1.37c-.12-.2 0-.3.09-.4.1-.1.2-.23.3-.35.1-.11.13-.2.2-.33.06-.13.03-.25-.02-.35-.05-.1-.44-1.06-.6-1.45-.16-.38-.32-.33-.44-.33h-.38c-.13 0-.34.05-.52.25-.18.2-.68.66-.68 1.62s.7 1.88.8 2.01c.1.13 1.37 2.1 3.33 2.94.46.2.83.32 1.11.41.47.15.89.13 1.23.08.37-.06 1.17-.48 1.34-.94.16-.46.16-.86.11-.94-.05-.08-.18-.13-.38-.23Z" fill="#fff"/>
+      </svg>
+    </a>
+    <a class="social-tiktok" href="https://www.tiktok.com/@laclecs" target="_blank" rel="noopener" aria-label="TikTok LA CLE CS">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.1 3.4h-3.6v13.1a2.9 2.9 0 1 1-2.05-2.77V10.3a6.4 6.4 0 1 0 5.65 6.35V9.85a8.1 8.1 0 0 0 4.7 1.5V7.95a4.9 4.9 0 0 1-4.7-4.55Z" fill="#25F4EE"/>
+        <path d="M16.5 3h-3.6v13.1a2.9 2.9 0 1 1-2.05-2.77V9.9a6.4 6.4 0 1 0 5.65 6.35V9.45a8.1 8.1 0 0 0 4.7 1.5V7.55A4.9 4.9 0 0 1 16.5 3Z" fill="#FE2C55"/>
+        <path d="M16.8 3.2h-3.6v13.1a2.9 2.9 0 1 1-2.05-2.77v-3.43a6.4 6.4 0 1 0 5.65 6.35V9.65a8.1 8.1 0 0 0 4.7 1.5V7.75a4.9 4.9 0 0 1-4.7-4.55Z" fill="#fff"/>
+      </svg>
+    </a>
+  </div>
+
   <br/>
+  <a href="#" class="admin-link" onclick="showSection('legal'); return false;">Mentions légales</a>
+  &nbsp;•&nbsp;
   <a href="#" class="admin-link" onclick="openAdminLogin(); return false;">Gestion</a>
 </footer>
+
+<!-- ==================== MENTIONS LÉGALES ==================== -->
+<section id="legal-page" class="page-section legal-page">
+  <h2>Mentions légales & Conditions d'utilisation</h2>
+  <div class="legal-updated">Dernière mise à jour : Septembre 2026</div>
+
+  <h3>1. Éditeur du site</h3>
+  <p>
+    Le site <strong>LA CLE CS</strong> est édité par Emmanuel VIGBEDO,
+    développeur web, pour le compte de la boutique LA CLE CS, commerce
+    général basé à Lomé, Togo.<br/>
+    Contact : <strong>emmavigbe1@gmail.com</strong> — WhatsApp/Téléphone : <strong>+228 70 16 33 74</strong>
+  </p>
+
+  <h3>2. Objet du site</h3>
+  <p>
+    Ce site permet à LA CLE CS de présenter ses produits, de recevoir des
+    commandes en ligne et de faciliter le contact avec ses clients. Il ne
+    constitue pas une plateforme de paiement en ligne : le règlement des
+    commandes se fait exclusivement à la livraison ou en boutique.
+  </p>
+
+  <h3>3. Commandes</h3>
+  <p>
+    Toute commande passée sur le site fait l'objet d'une prise de contact
+    par LA CLE CS pour confirmer la disponibilité du produit, organiser la
+    livraison et convenir des modalités de paiement à la livraison. Les prix
+    affichés sont exprimés en Francs CFA (FCFA) et peuvent être modifiés sans
+    préavis.
+  </p>
+
+  <h3>4. Données personnelles</h3>
+  <p>
+    Les informations transmises lors d'une commande (nom, email, téléphone,
+    adresse) sont utilisées uniquement dans le cadre du traitement de cette
+    commande (confirmation, livraison, facturation) et ne sont ni vendues ni
+    partagées avec des tiers. Elles sont conservées le temps nécessaire au
+    suivi de la relation commerciale.
+  </p>
+
+  <h3>5. Propriété intellectuelle</h3>
+  <p>
+    Le logo, les textes, visuels et l'ensemble des éléments du site LA CLE CS
+    sont la propriété de la boutique. Toute reproduction non autorisée est
+    interdite.
+  </p>
+
+  <h3>6. Responsabilité</h3>
+  <p>
+    LA CLE CS met tout en œuvre pour assurer l'exactitude des informations
+    présentées (descriptions, prix, disponibilité) mais ne saurait être tenue
+    responsable d'éventuelles erreurs ou indisponibilités de dernière minute,
+    qui seront signalées au client dès que possible.
+  </p>
+
+  <h3>7. Retours et échanges</h3>
+  <p>
+    Pour toute demande de retour ou d'échange, le client est invité à
+    contacter LA CLE CS directement via
+    <a href="https://wa.me/22870163374?text=Bonjour%20LA%20CLE%20CS%2C%20je%20souhaite%20faire%20une%20demande%20de%20retour%20%2F%20\u00e9change." target="_blank" rel="noopener" style="color:var(--gold);font-weight:600">WhatsApp (+228 70 16 33 74)</a>
+    en expliquant sa situation. Chaque
+    demande est étudiée au cas par cas afin de trouver la meilleure solution
+    avec le client.
+  </p>
+
+  <h3>8. Contact</h3>
+  <p>
+    Pour toute question relative à ces mentions légales ou à l'utilisation du
+    site, vous pouvez nous contacter à <strong>emmavigbe1@gmail.com</strong>
+    ou via WhatsApp au <strong>+228 70 16 33 74</strong>.<br/>
+    Adresse : <strong>Zossimé, Lomé-Togo</strong>.
+  </p>
+
+  <a href="#" class="legal-back" onclick="showSection('home'); return false;">← Retour à l'accueil</a>
+</section>
 
 <div id="toast">✓ Produit ajouté au panier !</div>
 
@@ -2231,7 +2362,7 @@ function finishShopping() {
 }
 
 function showSection(section, clickedButton = null) {
-  const sections = ['home', 'products', 'about', 'contact', 'admin'];
+  const sections = ['home', 'products', 'about', 'contact', 'admin', 'legal'];
 
   sections.forEach(name => {
     const el = document.getElementById(name + '-page');
