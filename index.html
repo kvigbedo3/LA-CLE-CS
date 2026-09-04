@@ -6,9 +6,10 @@
 <meta name="description" content="LA CLE CS - Boutique de commerce générale à Lomé. Électroménager, accessoires et articles du quotidien à prix imbattables. Commandez facilement et faites-vous livrer."/>
 <link rel="icon" type="image/png" href="imagess/logo-la-cle-cs.png">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-<!-- Firebase (base de données commandes/visites) -->
+<!-- Firebase (base de données commandes/visites + authentification gestionnaire) -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <!-- EmailJS (notifications par email) -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <!-- jsPDF (génération de factures PDF) -->
@@ -612,7 +613,7 @@
     .logo {
       font-size: 1.35rem;
     }
-    #track-btn, #cart-btn, #whatsapp-btn {
+    #cart-btn, #whatsapp-btn {
       font-size: 0.72rem !important;
       padding: 7px 10px !important;
     }
@@ -953,6 +954,12 @@
     vertical-align: middle; margin-right: 6px;
     background: #fff; border-radius: 5px; padding: 2px;
   }
+  .admin-link {
+    color: var(--text-muted); font-size: 0.72rem; opacity: 0.55;
+    text-decoration: none; margin-top: 10px; display: inline-block;
+    transition: opacity 0.2s;
+  }
+  .admin-link:hover { opacity: 1; color: var(--gold); }
 
   @media (max-width: 850px) {
     .home-gallery { grid-template-columns: repeat(2, 1fr); }
@@ -979,6 +986,53 @@
     .about-text { padding: 25px 20px; }
   }
 
+  /* =========================================================
+     ESPACE GESTIONNAIRE (authentification Firebase)
+     ========================================================= */
+  .admin-page { padding: 40px 5% 70px; max-width: 900px; margin: auto; }
+  .admin-topbar {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+  }
+  .admin-topbar h2 {
+    font-family: 'Playfair Display', serif; color: var(--gold); font-size: 1.6rem;
+  }
+  .admin-topbar .who { color: var(--text-muted); font-size: 0.8rem; }
+  .admin-search {
+    width: 100%; background: var(--dark2); border: 1px solid #333;
+    border-radius: 10px; padding: 12px 16px; color: var(--light);
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem; outline: none;
+    margin-bottom: 20px; transition: border-color 0.2s;
+  }
+  .admin-search:focus { border-color: var(--gold); }
+  .admin-order-card {
+    background: var(--dark2); border: 1px solid #2a2a2a; border-radius: 12px;
+    padding: 18px 20px; margin-bottom: 14px;
+  }
+  .admin-order-top {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 8px; flex-wrap: wrap; gap: 8px;
+  }
+  .admin-order-num { color: var(--gold); font-weight: 700; font-size: 1.02rem; }
+  .admin-order-date { color: var(--text-muted); font-size: 0.78rem; }
+  .admin-order-client { font-size: 0.92rem; margin-bottom: 4px; }
+  .admin-order-contact { color: var(--text-muted); font-size: 0.82rem; margin-bottom: 8px; }
+  .admin-order-items { color: #ccc; font-size: 0.85rem; margin-bottom: 10px; line-height: 1.5; }
+  .admin-order-bottom {
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 10px;
+  }
+  .admin-order-total { color: var(--gold); font-weight: 700; font-size: 1.05rem; }
+  .admin-pdf-btn {
+    background: var(--gold); color: var(--dark); border: none;
+    border-radius: 8px; font-weight: 600; font-size: 0.82rem;
+    padding: 9px 16px; cursor: pointer; transition: background 0.2s, transform 0.15s;
+  }
+  .admin-pdf-btn:hover { background: var(--gold-light); transform: scale(1.03); }
+  #admin-login-error {
+    display: none; color: var(--danger); font-size: 0.85rem; margin-bottom: 12px;
+  }
+
 </style>
 </head>
 <body>
@@ -992,9 +1046,6 @@
     <a id="whatsapp-btn" href="https://wa.me/22870163374?text=Bonjour%20LA%20CLE%20CS%2C%20je%20souhaite%20avoir%20plus%20d'informations%20sur%20vos%20produits." target="_blank" rel="noopener">
       💬 WhatsApp
     </a>
-    <button id="track-btn" onclick="openTrackModal()" style="cursor:pointer;background:transparent;border:1px solid #333;color:var(--light);font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.85rem;padding:9px 18px;border-radius:50px;transition:border-color 0.2s,color 0.2s">
-      📦 Suivre ma commande
-    </button>
     <button id="cart-btn" onclick="openCart()">
       🛒 Panier <span id="cart-count">0</span>
     </button>
@@ -1165,6 +1216,19 @@
       📞 Téléphone / WhatsApp : <strong style="color:var(--gold)">+228 70 16 33 74</strong>
     </div>
   </section>
+
+  <!-- ==================== ESPACE GESTIONNAIRE (protégé, connexion Firebase) ==================== -->
+  <section id="admin-page" class="page-section admin-page">
+    <div class="admin-topbar">
+      <h2>📋 Commandes reçues</h2>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span class="who" id="admin-who"></span>
+        <button class="btn-secondary" style="width:auto;margin-top:0" onclick="adminLogout()">🔒 Se déconnecter</button>
+      </div>
+    </div>
+    <input type="text" class="admin-search" id="admin-search" placeholder="Rechercher par nom, email ou n° de commande..." oninput="renderAdminOrders()"/>
+    <div id="admin-orders"></div>
+  </section>
 </main>
 
 <footer class="site-footer">
@@ -1175,6 +1239,8 @@
   <a href="https://wa.me/22870163374" target="_blank">
     Téléphone / WhatsApp : <strong style="color:var(--gold)">+228 70 16 33 74</strong>
   </a>
+  <br/>
+  <a href="#" class="admin-link" onclick="openAdminLogin(); return false;">Gestion</a>
 </footer>
 
 <div id="toast">✓ Produit ajouté au panier !</div>
@@ -1314,19 +1380,24 @@
   </div>
 </div>
 
-<div class="modal-overlay" id="modal-track">
-  <div class="modal" style="max-width:480px">
+<!-- ─── CONNEXION ESPACE GESTIONNAIRE (Firebase Authentication) ─── -->
+<div class="modal-overlay" id="modal-admin-login">
+  <div class="modal" style="max-width:400px">
     <div class="modal-header">
-      <h2>📦 Suivre ma commande</h2>
-      <button class="close-btn" onclick="closeTrackModal()">✕</button>
+      <h2>🔒 Espace gestionnaire</h2>
+      <button class="close-btn" onclick="closeAdminLogin()">✕</button>
     </div>
     <div class="cart-body">
+      <p id="admin-login-error">✗ Email ou mot de passe incorrect.</p>
       <div class="form-group">
-        <label>Votre email</label>
-        <input type="email" id="track-email" placeholder="jean@example.com" onkeydown="if(event.key==='Enter')trackOrders()"/>
+        <label>Email</label>
+        <input type="email" id="admin-email-input" placeholder="votre@email.com" autocomplete="username"/>
       </div>
-      <button class="btn-primary" onclick="trackOrders()" style="margin-top:4px">🔍 Rechercher mes commandes</button>
-      <div id="track-results" style="margin-top:20px"></div>
+      <div class="form-group">
+        <label>Mot de passe</label>
+        <input type="password" id="admin-pass-input" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')adminLogin()"/>
+      </div>
+      <button class="btn-primary" style="margin-top:4px" onclick="adminLogin()">Se connecter</button>
     </div>
   </div>
 </div>
@@ -1593,6 +1664,7 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
+const auth = firebase.auth();
 
 emailjs.init({ publicKey: "W7nWsm1fo6YWUN7Q5" });
 const EMAILJS_SERVICE_ID       = "service_ehgkibh";
@@ -1639,6 +1711,7 @@ let currentOrder = null;
 let searchTerm = '';
 let pmQty = 1; // quantité sélectionnée dans la fiche produit
 let pmCurrentProduct = null;
+let adminOrdersCache = [];
 
 // Génère le bloc image OU le placeholder si image vide
 // Les images réelles sont cliquables : elles ouvrent la fiche produit
@@ -2064,8 +2137,9 @@ function getImageBase64(url) {
   });
 }
 
-async function downloadInvoice() {
-  const o = currentOrder;
+// Construit et télécharge le PDF de facture à partir d'une commande normalisée
+// order = { num, date, prenom, nom, email, tel, adresse, items, total }
+async function buildInvoicePDF(order) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
@@ -2083,8 +2157,8 @@ async function downloadInvoice() {
 
   doc.setFontSize(10);
   doc.setTextColor(80, 80, 80);
-  doc.text(`FACTURE N° ${o.num}`, 195, 17, { align: 'right' });
-  doc.text(`Date : ${o.date}`, 195, 23, { align: 'right' });
+  doc.text(`FACTURE N° ${order.num}`, 195, 17, { align: 'right' });
+  doc.text(`Date : ${order.date}`, 195, 23, { align: 'right' });
 
   doc.setDrawColor(201, 168, 76);
   doc.setLineWidth(0.6);
@@ -2097,12 +2171,13 @@ async function downloadInvoice() {
   doc.text('FACTURER À', 20, 51);
   doc.setFontSize(10);
   doc.setTextColor(30, 30, 30);
-  doc.text(`${o.client.prenom} ${o.client.nom}`, 20, 57);
-  doc.text(`${o.client.email}${o.client.tel ? '  |  ' + o.client.tel : ''}`, 20, 63);
-  doc.text(doc.splitTextToSize(o.client.adresse, 165), 20, 69);
+  doc.text(`${order.prenom} ${order.nom}`, 20, 57);
+  doc.text(`${order.email}${order.tel ? '  |  ' + order.tel : ''}`, 20, 63);
+  doc.text(doc.splitTextToSize(order.adresse || '', 165), 20, 69);
 
-  const rows = o.items.map(item => {
+  const rows = order.items.map(item => {
     const p = PRODUCTS.find(pr => pr.id === item.id);
+    if (!p) return ['Produit supprimé', String(item.qty), '-', '-'];
     return [p.name, String(item.qty), fmt(p.price), fmt(p.price * item.qty)];
   });
 
@@ -2129,7 +2204,7 @@ async function downloadInvoice() {
   doc.setTextColor(30, 30, 30);
   doc.text('TOTAL', 150, y);
   doc.setTextColor(180, 145, 60);
-  doc.text(fmt(o.total), 195, y, { align: 'right' });
+  doc.text(fmt(order.total), 195, y, { align: 'right' });
 
   y += 20;
   doc.setFont('helvetica', 'normal');
@@ -2138,65 +2213,25 @@ async function downloadInvoice() {
   doc.text('Merci pour votre confiance. Cette facture est générée automatiquement.', 105, y, { align: 'center' });
   doc.text('Pour toute question : emmavigbe1@gmail.com  |  WhatsApp +228 70 16 33 74', 105, y + 5, { align: 'center' });
 
-  doc.save(`Facture_${o.num}.pdf`);
+  doc.save(`Facture_${order.num}.pdf`);
+}
+
+async function downloadInvoice() {
+  const o = currentOrder;
+  await buildInvoicePDF({
+    num: o.num, date: o.date,
+    prenom: o.client.prenom, nom: o.client.nom, email: o.client.email,
+    tel: o.client.tel, adresse: o.client.adresse,
+    items: o.items, total: o.total
+  });
 }
 
 function finishShopping() {
   cart = []; saveCart(); updateCartCount(); closeModals();
 }
 
-function openTrackModal() {
-  document.getElementById('modal-track').classList.add('open');
-  document.getElementById('track-results').innerHTML = '';
-}
-function closeTrackModal() {
-  document.getElementById('modal-track').classList.remove('open');
-}
-
-async function trackOrders() {
-  const emailInput = document.getElementById('track-email');
-  const email = emailInput.value.trim().toLowerCase();
-  const resultsDiv = document.getElementById('track-results');
-
-  if (!email) {
-    resultsDiv.innerHTML = '<p style="color:var(--danger);font-size:0.9rem">Veuillez entrer votre email.</p>';
-    return;
-  }
-
-  resultsDiv.innerHTML = '<p style="color:var(--text-muted);font-size:0.9rem">Recherche en cours...</p>';
-
-  try {
-    const snapshot = await db.collection('orders').where('email', '==', email).get();
-
-    if (snapshot.empty) {
-      resultsDiv.innerHTML = '<p style="color:var(--text-muted);font-size:0.9rem">Aucune commande trouvée pour cet email.</p>';
-      return;
-    }
-
-    const orders = [];
-    snapshot.forEach(doc => orders.push(doc.data()));
-    orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-    resultsDiv.innerHTML = orders.map(o => `
-      <div style="background:var(--dark3);border:1px solid #333;border-radius:10px;padding:14px 16px;margin-bottom:12px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-          <strong style="color:var(--gold)">${o.num}</strong>
-          <span style="font-size:0.78rem;background:#333;padding:3px 10px;border-radius:20px;color:var(--light)">${o.status || 'En attente'}</span>
-        </div>
-        <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:4px">${o.date}</div>
-        <div style="font-size:0.88rem;margin-bottom:6px">${o.itemsText || ''}</div>
-        <div style="font-weight:700;color:var(--gold)">${fmt(o.total)}</div>
-      </div>
-    `).join('');
-  } catch (err) {
-    console.error('Firestore (track) error:', err);
-    resultsDiv.innerHTML = '<p style="color:var(--danger);font-size:0.9rem">Erreur lors de la recherche. Réessayez plus tard.</p>';
-  }
-}
-
-
 function showSection(section, clickedButton = null) {
-  const sections = ['home', 'products', 'about', 'contact'];
+  const sections = ['home', 'products', 'about', 'contact', 'admin'];
 
   sections.forEach(name => {
     const el = document.getElementById(name + '-page');
@@ -2219,6 +2254,112 @@ function fmt(n) {
   return new Intl.NumberFormat('fr-FR').format(n) + ' FCFA';
 }
 
+// ════════════════════════════════════════════════════
+//  🔒 ESPACE GESTIONNAIRE — Authentification Firebase
+// ════════════════════════════════════════════════════
+function openAdminLogin() {
+  if (auth.currentUser) { showSection('admin'); loadAdminOrders(); return; }
+  document.getElementById('admin-login-error').style.display = 'none';
+  document.getElementById('modal-admin-login').classList.add('open');
+}
+function closeAdminLogin() {
+  document.getElementById('modal-admin-login').classList.remove('open');
+}
+function adminLogin() {
+  const email = document.getElementById('admin-email-input').value.trim();
+  const pass  = document.getElementById('admin-pass-input').value;
+  const errEl = document.getElementById('admin-login-error');
+  errEl.style.display = 'none';
+
+  auth.signInWithEmailAndPassword(email, pass)
+    .then(() => {
+      closeAdminLogin();
+      document.getElementById('admin-pass-input').value = '';
+      showSection('admin');
+      loadAdminOrders();
+    })
+    .catch(err => {
+      console.error('Auth error:', err);
+      errEl.style.display = 'block';
+    });
+}
+function adminLogout() {
+  auth.signOut().then(() => {
+    showSection('home');
+  });
+}
+
+async function loadAdminOrders() {
+  document.getElementById('admin-who').textContent = auth.currentUser ? auth.currentUser.email : '';
+  const container = document.getElementById('admin-orders');
+  container.innerHTML = '<p style="color:var(--text-muted)">Chargement des commandes...</p>';
+  try {
+    const snapshot = await db.collection('orders').get();
+    const orders = [];
+    snapshot.forEach(doc => orders.push(doc.data()));
+    orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    adminOrdersCache = orders;
+    renderAdminOrders();
+  } catch (err) {
+    console.error('Firestore (admin orders) error:', err);
+    container.innerHTML = '<p style="color:var(--danger)">Erreur lors du chargement des commandes. Vérifiez votre connexion.</p>';
+  }
+}
+
+function renderAdminOrders() {
+  const container = document.getElementById('admin-orders');
+  const term = (document.getElementById('admin-search').value || '').trim().toLowerCase();
+
+  let orders = adminOrdersCache;
+  if (term) {
+    orders = orders.filter(o =>
+      (o.num || '').toLowerCase().includes(term) ||
+      (o.email || '').toLowerCase().includes(term) ||
+      (o.prenom || '').toLowerCase().includes(term) ||
+      (o.nom || '').toLowerCase().includes(term)
+    );
+  }
+
+  if (orders.length === 0) {
+    container.innerHTML = '<p style="color:var(--text-muted)">Aucune commande trouvée.</p>';
+    return;
+  }
+
+  container.innerHTML = orders.map(o => `
+    <div class="admin-order-card">
+      <div class="admin-order-top">
+        <span class="admin-order-num">${o.num}</span>
+        <span class="admin-order-date">${o.date}</span>
+      </div>
+      <div class="admin-order-client">${o.prenom} ${o.nom}</div>
+      <div class="admin-order-contact">${o.email}${o.tel ? ' • ' + o.tel : ''}${o.adresse ? ' • ' + o.adresse : ''}</div>
+      <div class="admin-order-items">${o.itemsText || ''}</div>
+      <div class="admin-order-bottom">
+        <span class="admin-order-total">${fmt(o.total)}</span>
+        <button class="admin-pdf-btn" onclick="generateAdminInvoice('${o.num}')">📄 Générer la facture PDF</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function generateAdminInvoice(orderNum) {
+  const o = adminOrdersCache.find(ord => ord.num === orderNum);
+  if (!o) return;
+  await buildInvoicePDF({
+    num: o.num, date: o.date,
+    prenom: o.prenom, nom: o.nom, email: o.email,
+    tel: o.tel, adresse: o.adresse,
+    items: o.items, total: o.total
+  });
+}
+
+// Si l'utilisateur est déjà connecté (session précédente), garde-le connecté silencieusement
+auth.onAuthStateChanged(user => {
+  if (user) {
+    document.getElementById('admin-who').textContent = user.email;
+  }
+});
+
 renderProducts();
 updateCartCount();
 trackVisit();
@@ -2226,8 +2367,8 @@ trackVisit();
 document.getElementById('modal-cart').addEventListener('click', function(e) {
   if (e.target === this) closeModals();
 });
-document.getElementById('modal-track').addEventListener('click', function(e) {
-  if (e.target === this) closeTrackModal();
+document.getElementById('modal-admin-login').addEventListener('click', function(e) {
+  if (e.target === this) closeAdminLogin();
 });
 document.getElementById('modal-product').addEventListener('click', function(e) {
   if (e.target === this) closeProductModal();
