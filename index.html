@@ -360,6 +360,49 @@
     cursor: pointer; transition: background 0.2s, transform 0.15s;
   }
   .btn-primary:hover { background: var(--gold-light); transform: scale(1.02); }
+  .btn-primary.ready-pulse {
+    animation: btnReadyPulse 1.3s ease-in-out infinite;
+  }
+  @keyframes btnReadyPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(201,168,76,0.55); }
+    50% { box-shadow: 0 0 0 10px rgba(201,168,76,0); }
+  }
+  .form-group input.field-guide-pulse,
+  .form-group textarea.field-guide-pulse {
+    animation: fieldGuidePulse 0.9s ease-in-out 2;
+  }
+  @keyframes fieldGuidePulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(201,168,76,0.55); border-color: var(--gold); }
+    50% { box-shadow: 0 0 0 6px rgba(201,168,76,0); border-color: var(--gold); }
+  }
+  #cart-btn.cart-hint-pulse {
+    animation: cartHintPulse 1.1s ease-in-out 4;
+  }
+  @keyframes cartHintPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(201,168,76,0.6); transform: scale(1); }
+    50% { box-shadow: 0 0 0 9px rgba(201,168,76,0); transform: scale(1.06); }
+  }
+  .cart-hint-bubble {
+    position: fixed; top: 78px; right: 5%;
+    background: var(--gold); color: var(--dark);
+    padding: 10px 16px; border-radius: 10px;
+    font-size: 0.82rem; font-weight: 600;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    z-index: 150; max-width: 240px;
+    opacity: 0; transform: translateY(-8px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+  }
+  .cart-hint-bubble.show { opacity: 1; transform: translateY(0); }
+  .cart-hint-bubble::after {
+    content: ''; position: absolute; top: -7px; right: 24px;
+    border-left: 7px solid transparent; border-right: 7px solid transparent;
+    border-bottom: 7px solid var(--gold);
+  }
+  @media (max-width: 480px) {
+    .cart-hint-bubble { top: 96px; right: 4%; left: 4%; max-width: none; text-align: center; }
+    .cart-hint-bubble::after { right: 40px; }
+  }
   .btn-secondary {
     width: 100%; margin-top: 10px;
     background: transparent; color: var(--text-muted);
@@ -907,7 +950,7 @@
 
   .contact-grid {
    display: grid;
-   grid-template-columns: repeat(2, minmax(260px, 320px));
+   grid-template-columns: repeat(3, minmax(230px, 300px));
    justify-content: center;
    gap: 20px;
    max-width: 1050px;
@@ -1266,6 +1309,13 @@
         <p>Envoyez-nous un SMS au <strong>+228 70 16 33 74</strong>.</p>
       </a>
 
+      <a class="contact-card"
+         href="mailto:emmavigbe1@gmail.com?subject=Question%20-%20LA%20CLE%20CS">
+        <div class="contact-icon">✉️</div>
+        <h3>Email</h3>
+        <p>Écrivez-nous à <strong>emmavigbe1@gmail.com</strong> pour toute question.</p>
+      </a>
+
     </div>
 
     <div style="text-align:center;margin-top:35px;color:var(--text-muted);font-size:.85rem">
@@ -1394,7 +1444,8 @@
   <a href="#" class="legal-back" onclick="showSection('home'); return false;">← Retour à l'accueil</a>
 </section>
 
-<div id="toast">✓ Produit ajouté au panier !</div>
+<div id="toast">✓ Ajouté ! Cliquez sur 🛒 Panier pour commander</div>
+<div class="cart-hint-bubble" id="cart-hint-bubble">👉 Cliquez ici pour finaliser votre commande</div>
 
 <!-- ─── ÉCRAN DE BLOCAGE HORS-LIGNE ─── -->
 <div class="offline-overlay" id="offline-overlay">
@@ -1484,11 +1535,11 @@
       <div class="thanks-icon">🙏</div>
       <h2>Merci pour votre commande !</h2>
       <p>Votre commande a bien été enregistrée.</p>
-      <p>Nous vous contacterons très bientôt pour que 
-        vous puissiez nous envoyer votre localisation,
-        Le paiement se fera à la livraison.</p>
+      <p>Pour accélérer le traitement, confirmez votre commande directement
+        sur WhatsApp en un clic — le message est déjà prêt.</p>
       <div class="order-id" id="order-id-display"></div>
-      <button class="btn-primary" onclick="showInvoice()">📄 Voir ma facture</button>
+      <button class="btn-primary" id="whatsapp-confirm-btn" onclick="confirmOrderViaWhatsapp()" style="background:var(--whatsapp);color:#fff">💬 Confirmer ma commande via WhatsApp</button>
+      <button class="btn-secondary" onclick="showInvoice()">📄 Voir ma facture</button>
     </div>
 
     <div id="view-invoice" class="invoice-body" style="display:none">
@@ -1853,7 +1904,9 @@ function notifyClient(clientEmail, clientName, messageText) {
   }).catch(err => console.error('EmailJS (client) error:', err));
 }
 
-// Enregistre une visite + notifie le propriétaire (une seule fois par session de navigation)
+// Enregistre une visite dans Firestore (une seule fois par session de navigation)
+// L'email automatique par visite a été retiré pour préserver le quota EmailJS —
+// les visites restent consultables dans Firestore si besoin.
 function trackVisit() {
   if (sessionStorage.getItem('visit_notified')) return;
   sessionStorage.setItem('visit_notified', '1');
@@ -1863,7 +1916,6 @@ function trackVisit() {
     page: location.href,
     userAgent: navigator.userAgent
   }).catch(err => console.error('Firestore (visit) error:', err));
-  notifyOwner('Nouvelle visite sur le site', `Quelqu'un vient de visiter votre boutique en ligne, le ${now}.`);
 }
 
 let cart = JSON.parse(localStorage.getItem('cart') || '[]');
@@ -1999,7 +2051,7 @@ function addToCartFromModal(productId) {
   const existing = cart.find(i => i.id === productId);
   if (existing) existing.qty += pmQty;
   else cart.push({ id: productId, qty: pmQty });
-  saveCart(); updateCartCount(); showToast();
+  saveCart(); updateCartCount(); showToast(); showCartHint();
   closeProductModal();
 }
 
@@ -2083,7 +2135,7 @@ function addToCart(productId) {
   const existing = cart.find(i => i.id === productId);
   if (existing) existing.qty++;
   else cart.push({ id: productId, qty: 1 });
-  saveCart(); updateCartCount(); showToast();
+  saveCart(); updateCartCount(); showToast(); showCartHint();
 }
 
 function removeFromCart(productId) {
@@ -2118,7 +2170,27 @@ function showToast() {
   setTimeout(() => t.classList.remove('show'), 2200);
 }
 
+// Fait pulser le bouton panier + affiche une bulle guidant le client
+// vers le panier après l'ajout d'un produit.
+let cartHintTimer = null;
+function showCartHint() {
+  const btn = document.getElementById('cart-btn');
+  const bubble = document.getElementById('cart-hint-bubble');
+  btn.classList.remove('cart-hint-pulse');
+  void btn.offsetWidth;
+  btn.classList.add('cart-hint-pulse');
+  bubble.classList.add('show');
+  if (cartHintTimer) clearTimeout(cartHintTimer);
+  cartHintTimer = setTimeout(() => {
+    bubble.classList.remove('show');
+    btn.classList.remove('cart-hint-pulse');
+  }, 4200);
+}
+
 function openCart() {
+  const bubble = document.getElementById('cart-hint-bubble');
+  bubble.classList.remove('show');
+  document.getElementById('cart-btn').classList.remove('cart-hint-pulse');
   setStep(1); showView('cart');
   document.getElementById('modal-title').textContent = '🛒 Mon Panier';
   renderCartView();
@@ -2183,6 +2255,7 @@ function goToOrder() {
   if (cart.length === 0) return;
   setStep(2); showView('order');
   document.getElementById('modal-title').textContent = '📋 Informations de commande';
+  initOrderFormGuide();
 }
 
 function backToCart() {
@@ -2210,6 +2283,52 @@ function clearFormError() {
 function markFieldError(id, isError) {
   const el = document.getElementById(id);
   if (el) el.classList.toggle('field-error', isError);
+}
+
+// ════════════════════════════════════════════════════
+//  ✨ GUIDAGE VISUEL DU FORMULAIRE DE COMMANDE
+//  Anime le champ suivant à remplir, puis fait pulser
+//  le bouton de confirmation une fois tout complété.
+// ════════════════════════════════════════════════════
+const ORDER_FIELD_SEQUENCE = ['f-prenom', 'f-nom', 'f-email', 'f-adresse'];
+let orderGuideAttached = false;
+
+function pulseGuide(el) {
+  el.classList.remove('field-guide-pulse');
+  void el.offsetWidth;
+  el.classList.add('field-guide-pulse');
+}
+
+function updateOrderGuide() {
+  const submitBtn = document.querySelector('#order-form-section .btn-primary');
+  let nextEmpty = null;
+  for (const id of ORDER_FIELD_SEQUENCE) {
+    const el = document.getElementById(id);
+    if (el && !el.value.trim()) { nextEmpty = el; break; }
+  }
+  if (nextEmpty) {
+    pulseGuide(nextEmpty);
+    if (submitBtn) submitBtn.classList.remove('ready-pulse');
+    return;
+  }
+  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(document.getElementById('f-email').value.trim());
+  if (!emailValid) {
+    pulseGuide(document.getElementById('f-email'));
+    if (submitBtn) submitBtn.classList.remove('ready-pulse');
+    return;
+  }
+  if (submitBtn) submitBtn.classList.add('ready-pulse');
+}
+
+function initOrderFormGuide() {
+  const submitBtn = document.querySelector('#order-form-section .btn-primary');
+  if (submitBtn) submitBtn.classList.remove('ready-pulse');
+  if (orderGuideAttached) return;
+  orderGuideAttached = true;
+  ORDER_FIELD_SEQUENCE.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', updateOrderGuide);
+  });
 }
 
 function submitOrder() {
@@ -2261,6 +2380,8 @@ function submitOrder() {
     createdAt: new Date().toISOString()
   }).catch(err => console.error('Firestore (order) error:', err));
 
+  // Email garanti au propriétaire à chaque commande — ne dépend pas
+  // d'une action du client (contrairement au bouton WhatsApp, optionnel).
   notifyOwner(
     `Nouvelle commande ${orderNum}`,
     `Nouvelle commande de ${prenom} ${nom} (${email}${tel ? ', ' + tel : ''}). Articles : ${itemsText}. Total : ${fmt(total)}. Adresse de livraison : ${adresse}.`
@@ -2275,6 +2396,34 @@ function submitOrder() {
   setStep(3); showView('thanks');
   document.getElementById('modal-title').textContent = '✅ Commande confirmée';
   document.getElementById('order-id-display').textContent = orderNum;
+}
+
+// Construit le message de confirmation de commande et ouvre WhatsApp
+// vers le numéro de la boutique — remplace l'email de notification
+// automatique pour préserver le quota EmailJS.
+function confirmOrderViaWhatsapp() {
+  const o = currentOrder;
+  if (!o) return;
+
+  const lines = o.items.map(item => {
+    const p = PRODUCTS.find(pr => pr.id === item.id);
+    return `• ${p ? p.name : 'Produit'} x${item.qty} — ${fmt(p ? p.price * item.qty : 0)}`;
+  }).join('\n');
+
+  const msg =
+`Bonjour LA CLE CS, je souhaite confirmer ma commande ${o.num}.
+${lines}
+
+Sous-total : ${fmt(o.total)}
+Livraison : Payer à la livraison
+Total : ${fmt(o.total)}
+
+Nom : ${o.client.prenom} ${o.client.nom}
+Téléphone : ${o.client.tel || 'Non renseigné'}
+Adresse : ${o.client.adresse}
+Paiement : Paiement à la livraison`;
+
+  window.open(`https://wa.me/${SHOP_PHONE_INTL}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
 function showInvoice() {
