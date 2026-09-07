@@ -1087,12 +1087,20 @@
     flex-wrap: wrap; gap: 10px;
   }
   .admin-order-total { color: var(--gold); font-weight: 700; font-size: 1.05rem; }
+  .admin-order-actions { display: flex; gap: 8px; flex-wrap: wrap; }
   .admin-pdf-btn {
     background: var(--gold); color: var(--dark); border: none;
     border-radius: 8px; font-weight: 600; font-size: 0.82rem;
     padding: 9px 16px; cursor: pointer; transition: background 0.2s, transform 0.15s;
   }
   .admin-pdf-btn:hover { background: var(--gold-light); transform: scale(1.03); }
+  .admin-delivery-btn {
+    background: var(--success); color: #fff; border: none;
+    border-radius: 8px; font-weight: 600; font-size: 0.82rem;
+    padding: 9px 16px; cursor: pointer; transition: background 0.2s, transform 0.15s;
+  }
+  .admin-delivery-btn:hover { background: #5fcf9a; transform: scale(1.03); }
+  .admin-delivery-btn.no-geo { opacity: 0.85; }
   #admin-login-error {
     display: none; color: var(--danger); font-size: 0.85rem; margin-bottom: 12px;
   }
@@ -2331,7 +2339,40 @@ function initOrderFormGuide() {
   });
 }
 
-function submitOrder() {
+// ════════════════════════════════════════════════════
+//  📍 LOCALISATION CLIENT — capture silencieuse au moment
+//  de la commande. Si le client autorise le partage de
+//  position, ses coordonnées GPS précises sont enregistrées
+//  avec la commande (en plus de l'adresse saisie). Sinon,
+//  la commande part quand même : le livreur s'appuiera sur
+//  l'adresse texte via le bouton "📍 Livraison" côté gestionnaire.
+// ════════════════════════════════════════════════════
+function captureClientGeolocation(timeoutMs = 6000) {
+  return new Promise(resolve => {
+    if (!navigator.geolocation) { resolve(null); return; }
+    let settled = false;
+    const timer = setTimeout(() => {
+      if (settled) return;
+      settled = true;
+      resolve(null);
+    }, timeoutMs);
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        if (settled) return;
+        settled = true; clearTimeout(timer);
+        resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+      },
+      () => {
+        if (settled) return;
+        settled = true; clearTimeout(timer);
+        resolve(null); // refusé, indisponible ou timeout — on continue sans bloquer la commande
+      },
+      { enableHighAccuracy: true, timeout: timeoutMs, maximumAge: 120000 }
+    );
+  });
+}
+
+async function submitOrder() {
   const prenom  = document.getElementById('f-prenom').value.trim();
   const nom     = document.getElementById('f-nom').value.trim();
   const email   = document.getElementById('f-email').value.trim();
@@ -2356,11 +2397,15 @@ function submitOrder() {
   const dateStr  = new Date().toLocaleDateString('fr-FR', { year:'numeric', month:'long', day:'numeric' });
   const total    = getCartTotal();
 
+  // Tentative silencieuse de localisation précise (n'empêche jamais la commande de partir)
+  const geo = await captureClientGeolocation();
+
   currentOrder = {
     num: orderNum, date: dateStr,
     client: { prenom, nom, email, tel, adresse },
     items: [...cart],
-    total: total
+    total: total,
+    geo
   };
 
   const itemsText = cart.map(item => {
@@ -2373,6 +2418,7 @@ function submitOrder() {
     date: dateStr,
     email: email.toLowerCase(),
     prenom, nom, tel, adresse,
+    geo: geo || null,
     items: cart,
     itemsText,
     total,
@@ -2674,10 +2720,34 @@ function renderAdminOrders() {
       <div class="admin-order-items">${escapeHTML(o.itemsText || '')}</div>
       <div class="admin-order-bottom">
         <span class="admin-order-total">${fmt(o.total)}</span>
-        <button class="admin-pdf-btn" onclick="generateAdminInvoice('${escapeHTML(o.num)}')">📄 Générer la facture PDF</button>
+        <div class="admin-order-actions">
+          <button class="admin-delivery-btn${o.geo && typeof o.geo.lat === 'number' ? '' : ' no-geo'}" onclick="openDeliveryLocation('${escapeHTML(o.num)}')" title="${o.geo && typeof o.geo.lat === 'number' ? 'Position GPS précise du client' : 'Ouvrir l\u2019adresse indiquée sur la carte'}">📍 Livraison</button>
+          <button class="admin-pdf-btn" onclick="generateAdminInvoice('${escapeHTML(o.num)}')">📄 Générer la facture PDF</button>
+        </div>
       </div>
     </div>
   `).join('');
+}
+
+// Ouvre la localisation du client pour le livreur : coordonnées GPS précises
+// si le client les a partagées lors de la commande, sinon l'adresse texte
+// saisie (recherchée sur Google Maps) — le bouton fonctionne dans tous les cas.
+function openDeliveryLocation(orderNum) {
+  const o = adminOrdersCache.find(ord => ord.num === orderNum);
+  if (!o) return;
+
+  if (o.geo && typeof o.geo.lat === 'number' && typeof o.geo.lng === 'number') {
+    window.open(`https://www.google.com/maps?q=${o.geo.lat},${o.geo.lng}`, '_blank');
+    return;
+  }
+
+  if (o.adresse) {
+    const query = encodeURIComponent(`${o.adresse}, Lomé, Togo`);
+    window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
+    return;
+  }
+
+  alert("Aucune adresse ni position n'est disponible pour cette commande.");
 }
 
 async function generateAdminInvoice(orderNum) {
