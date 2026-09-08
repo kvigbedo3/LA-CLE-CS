@@ -95,6 +95,39 @@
   }
   #whatsapp-btn:hover { background: #1eb855; transform: scale(1.04); }
 
+  /* BANDEAU APPEL TÉLÉPHONIQUE — visible sur toutes les pages */
+  .call-banner {
+    background: linear-gradient(90deg, var(--gold-light), var(--gold) 50%, var(--gold-light));
+    text-align: center;
+    padding: 11px 5%;
+    border-bottom: 1px solid rgba(0,0,0,0.15);
+  }
+  .call-banner a {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 9px; flex-wrap: wrap;
+    color: var(--dark);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600; font-size: 0.95rem;
+    text-decoration: none;
+    letter-spacing: 0.2px;
+  }
+  .call-banner a:hover { text-decoration: underline; }
+  .call-banner a strong { font-weight: 800; }
+  .call-banner-icon {
+    font-size: 1.15rem;
+    display: inline-block;
+    animation: call-banner-ring 2.2s ease-in-out infinite;
+    transform-origin: 70% 70%;
+  }
+  @keyframes call-banner-ring {
+    0%, 55%, 100% { transform: rotate(0deg); }
+    60%  { transform: rotate(-16deg); }
+    65%  { transform: rotate(14deg); }
+    70%  { transform: rotate(-10deg); }
+    75%  { transform: rotate(6deg); }
+    80%  { transform: rotate(0deg); }
+  }
+
   .hero {
     background: linear-gradient(135deg, #1a1400 0%, #0e0e0e 60%, #1a0e00 100%);
     text-align: center; padding: 70px 5% 50px;
@@ -119,7 +152,7 @@
     background: linear-gradient(to right, var(--gold), transparent);
   }
 
-  /* ─── BARRE DE RECHERCHE ─── */
+  /* BARRE DE RECHERCHE */
   .search-wrap {
     position: relative;
     max-width: 480px;
@@ -190,7 +223,7 @@
     border-color: var(--gold);
   }
 
-  /* ─── IMAGE PRODUIT ─── */
+  /* IMAGE PRODUIT */
   .product-img-wrap {
     width: 100%; height: 220px;
     overflow: hidden;
@@ -295,6 +328,8 @@
     transition: background 0.2s;
   }
   .close-btn:hover { background: #444; }
+  .close-btn.locked { opacity: 0.35; cursor: not-allowed; }
+  .close-btn.locked:hover { background: #333; }
 
   .cart-body { padding: 20px 28px; }
   .cart-empty {
@@ -519,7 +554,7 @@
   .step-line { width: 40px; height: 2px; background: #2a2a2a; margin: 0 4px; align-self: center; transition: background 0.3s; }
   .step-line.done { background: var(--success); }
 
-  /* ─── LIGHTBOX (aperçu image en grand) ─── */
+  /* LIGHTBOX (aperçu image en grand) */
   .lightbox-overlay {
     display: none; position: fixed;
     inset: 0; z-index: 300;
@@ -554,7 +589,7 @@
   }
   .lightbox-close:hover { background: rgba(255,255,255,0.25); }
 
-  /* ─── FICHE PRODUIT (aperçu rapide) ─── */
+  /* FICHE PRODUIT (aperçu rapide) */
   .modal-overlay#modal-product .modal {
     max-width: 640px;
     max-height: 92vh;
@@ -647,6 +682,8 @@
   .pm-btn-sms:hover { background: #3a4a68; transform: scale(1.02); }
 
   @media (max-width: 480px) {
+    .call-banner { padding: 9px 4%; }
+    .call-banner a { font-size: 0.8rem; gap: 6px; }
     header {
       justify-content: center;
       text-align: center;
@@ -1081,6 +1118,8 @@
   .admin-order-date { color: var(--text-muted); font-size: 0.78rem; }
   .admin-order-client { font-size: 0.92rem; margin-bottom: 4px; }
   .admin-order-contact { color: var(--text-muted); font-size: 0.82rem; margin-bottom: 8px; }
+  .admin-contact-link { color: var(--gold); text-decoration: none; font-weight: 600; }
+  .admin-contact-link:hover { text-decoration: underline; color: var(--gold-light); }
   .admin-order-items { color: #ccc; font-size: 0.85rem; margin-bottom: 10px; line-height: 1.5; }
   .admin-order-bottom {
     display: flex; justify-content: space-between; align-items: center;
@@ -1124,7 +1163,7 @@
   }
   .legal-back:hover { color: var(--gold-light); }
 
-  /* ─── ÉCRAN DE BLOCAGE HORS-LIGNE ─── */
+  /* ÉCRAN DE BLOCAGE HORS-LIGNE */
   .offline-overlay {
     display: none; position: fixed; inset: 0; z-index: 99999;
     background: var(--dark);
@@ -1151,19 +1190,26 @@
   </div>
   <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap">
     <a id="whatsapp-btn" href="https://wa.me/22870163374?text=Bonjour%20LA%20CLE%20CS%2C%20je%20souhaite%20avoir%20plus%20d'informations%20sur%20vos%20produits." target="_blank" rel="noopener">
-      💬 WhatsApp
+      <svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4.5h16v12H8.5L4 20.5V4.5z"/></svg> WhatsApp
     </a>
     <button id="cart-btn" onclick="openCart()">
-      🛒 Panier <span id="cart-count">0</span>
+      <svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M3 3h2l2.2 11.4a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 7H6"/></svg> Panier <span id="cart-count">0</span>
     </button>
   </div>
 </header>
 
+<div class="call-banner">
+  <a href="tel:+22870163374">
+    <span class="call-banner-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.6 2h3.5l1.2 5-2.3 2.3a13 13 0 0 0 6.7 6.7l2.3-2.3 5 1.2v3.5a2 2 0 0 1-2.2 2C10.4 19.6 4.4 13.6 4.6 4.2A2 2 0 0 1 6.6 2z"/></svg></span>
+    Rejoignez-nous par Appel téléphonique au <strong>+228 70 16 33 74</strong> — Nous sommes à votre entière disposition.
+  </a>
+</div>
+
 <nav class="main-nav" aria-label="Navigation principale">
-  <button class="nav-btn active" onclick="showSection('home', this)">🏠 Accueil</button>
-  <button class="nav-btn" onclick="showSection('products', this)">🛍️ Nos produits</button>
-  <button class="nav-btn" onclick="showSection('about', this)">🏪 À propos de nous</button>
-  <button class="nav-btn" onclick="showSection('contact', this)">📞 Contact</button>
+  <button class="nav-btn active" onclick="showSection('home', this)"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg> Accueil</button>
+  <button class="nav-btn" onclick="showSection('products', this)"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1 12.5H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg> Nos produits</button>
+  <button class="nav-btn" onclick="showSection('about', this)"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.2-5h15.6L21 9"/><path d="M4 9v11.5h16V9"/><path d="M9.5 20.5v-6h5v6"/></svg> À propos de nous</button>
+  <button class="nav-btn" onclick="showSection('contact', this)"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.6 2h3.5l1.2 5-2.3 2.3a13 13 0 0 0 6.7 6.7l2.3-2.3 5 1.2v3.5a2 2 0 0 1-2.2 2C10.4 19.6 4.4 13.6 4.6 4.2A2 2 0 0 1 6.6 2z"/></svg> Contact</button>
 </nav>
 
 <main>
@@ -1179,9 +1225,9 @@
       </p>
 
       <div class="home-actions">
-        <button class="home-action" onclick="showSection('products')">🛍️ Nos produits</button>
-        <button class="home-action alt" onclick="showSection('about')">🏪 À propos de nous</button>
-        <button class="home-action alt" onclick="showSection('contact')">📞 Nous contacter</button>
+        <button class="home-action" onclick="showSection('products')"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1 12.5H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg> Nos produits</button>
+        <button class="home-action alt" onclick="showSection('about')"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.2-5h15.6L21 9"/><path d="M4 9v11.5h16V9"/><path d="M9.5 20.5v-6h5v6"/></svg> À propos de nous</button>
+        <button class="home-action alt" onclick="showSection('contact')"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.6 2h3.5l1.2 5-2.3 2.3a13 13 0 0 0 6.7 6.7l2.3-2.3 5 1.2v3.5a2 2 0 0 1-2.2 2C10.4 19.6 4.4 13.6 4.6 4.2A2 2 0 0 1 6.6 2z"/></svg> Nous contacter</button>
       </div>
 
       <div class="home-gallery">
@@ -1197,9 +1243,9 @@
   <section id="products-page" class="page-section products-section">
   <div class="section-title">Nos Produits</div>
 
-  <!-- ─── BARRE DE RECHERCHE ─── -->
+  <!-- BARRE DE RECHERCHE -->
   <div class="search-wrap">
-    <span class="search-icon">🔍</span>
+    <span class="search-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.3-4.3"/></svg></span>
     <input
       type="text"
       id="product-search"
@@ -1207,7 +1253,7 @@
       oninput="filterProducts()"
       autocomplete="off"
     />
-    <button class="search-clear" id="search-clear" onclick="clearSearch()">✕</button>
+    <button class="search-clear" id="search-clear" onclick="clearSearch()"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
   </div>
   <div class="search-results-count" id="search-results-count"></div>
 
@@ -1271,17 +1317,17 @@
 
       <div class="about-highlights">
         <div class="about-highlight">
-          <div class="icon">🤝</div>
+          <div class="icon"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="7.5" r="3"/><path d="M2.5 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="8.5" r="2.3"/><path d="M14.8 20c0-2.6 1.7-4.8 4.2-5.6"/></svg></div>
           <strong>Proximité</strong>
           <span>Une relation directe et attentive avec nos clients.</span>
         </div>
         <div class="about-highlight">
-          <div class="icon">🛍️</div>
+          <div class="icon"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1 12.5H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></div>
           <strong>Diversité</strong>
           <span>Une sélection de produits adaptée aux besoins du quotidien.</span>
         </div>
         <div class="about-highlight">
-          <div class="icon">⭐</div>
+          <div class="icon"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg></div>
           <strong>Service</strong>
           <span>Une expérience simple, claire et professionnelle.</span>
         </div>
@@ -1304,7 +1350,7 @@
       <a class="contact-card"
          href="https://wa.me/22870163374?text=Bonjour%20LA%20CLE%20CS%2C%20je%20souhaite%20avoir%20plus%20d'informations%20sur%20vos%20produits."
          target="_blank" rel="noopener">
-        <div class="contact-icon">💬</div>
+        <div class="contact-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4.5h16v12H8.5L4 20.5V4.5z"/></svg></div>
         <h3>WhatsApp</h3>
         <p>Écrivez-nous directement sur WhatsApp pour obtenir rapidement une réponse.</p>
       </a>
@@ -1312,14 +1358,14 @@
       <a class="contact-card"
          href="sms:+22870163374?&body=Bonjour%20LA%20CLE%20CS%2C%20je%20souhaite%20avoir%20plus%20d'informations."
          target="_blank">
-        <div class="contact-icon">📱</div>
+        <div class="contact-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="2"/><path d="M11 18.5h2"/></svg></div>
         <h3>SMS</h3>
         <p>Envoyez-nous un SMS au <strong>+228 70 16 33 74</strong>.</p>
       </a>
 
       <a class="contact-card"
          href="mailto:emmavigbe1@gmail.com?subject=Question%20-%20LA%20CLE%20CS">
-        <div class="contact-icon">✉️</div>
+        <div class="contact-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 6.5l9 6.5 9-6.5"/></svg></div>
         <h3>Email</h3>
         <p>Écrivez-nous à <strong>emmavigbe1@gmail.com</strong> pour toute question.</p>
       </a>
@@ -1327,17 +1373,17 @@
     </div>
 
     <div style="text-align:center;margin-top:35px;color:var(--text-muted);font-size:.85rem">
-      📞 Téléphone / WhatsApp : <strong style="color:var(--gold)">+228 70 16 33 74</strong>
+      <svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.6 2h3.5l1.2 5-2.3 2.3a13 13 0 0 0 6.7 6.7l2.3-2.3 5 1.2v3.5a2 2 0 0 1-2.2 2C10.4 19.6 4.4 13.6 4.6 4.2A2 2 0 0 1 6.6 2z"/></svg> Téléphone / WhatsApp : <strong style="color:var(--gold)">+228 70 16 33 74</strong>
     </div>
   </section>
 
   <!-- ==================== ESPACE GESTIONNAIRE (protégé, connexion Firebase) ==================== -->
   <section id="admin-page" class="page-section admin-page">
     <div class="admin-topbar">
-      <h2>📋 Commandes reçues</h2>
+      <h2><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="12" height="16" rx="2"/><path d="M9 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1"/><path d="M9 10h6M9 14h6"/></svg> Commandes reçues</h2>
       <div style="display:flex;align-items:center;gap:12px">
         <span class="who" id="admin-who"></span>
-        <button class="btn-secondary" style="width:auto;margin-top:0" onclick="adminLogout()">🔒 Se déconnecter</button>
+        <button class="btn-secondary" style="width:auto;margin-top:0" onclick="adminLogout()"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg> Se déconnecter</button>
       </div>
     </div>
     <input type="text" class="admin-search" id="admin-search" placeholder="Rechercher par nom, email ou n° de commande..." oninput="renderAdminOrders()"/>
@@ -1350,7 +1396,7 @@
   © 2026 LA CLE CS — Boutique de commerce générale. Tous droits réservés.
   Designed by Emmanuel VIGBEDO !
   <br/>
-  📍 Zossimé, Lomé-Togo
+  <svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-7.4 7-12.5A7 7 0 0 0 5 9.5C5 14.6 12 22 12 22z"/><circle cx="12" cy="9.5" r="2.5"/></svg> Zossimé, Lomé-Togo
   <br/>
   <a href="https://wa.me/22870163374" target="_blank">
     Téléphone / WhatsApp : <strong style="color:var(--gold)">+228 70 16 33 74</strong>
@@ -1387,7 +1433,7 @@
     Le site <strong>LA CLE CS</strong> est édité par Emmanuel VIGBEDO,
     développeur web, pour le compte de la boutique LA CLE CS, commerce
     général basé à Lomé, Togo.<br/>
-    Contact : <strong>emmavigbe1@gmail.com</strong> — WhatsApp/Téléphone : <strong>+228 70 16 33 74</strong>
+    Contact : <a href="mailto:emmavigbe1@gmail.com" style="color:var(--gold);font-weight:600"><strong>emmavigbe1@gmail.com</strong></a> — WhatsApp/Téléphone : <a href="tel:+22870163374" style="color:var(--gold);font-weight:600"><strong>+228 70 16 33 74</strong></a>
   </p>
 
   <h3>2. Objet du site</h3>
@@ -1444,40 +1490,40 @@
   <h3>8. Contact</h3>
   <p>
     Pour toute question relative à ces mentions légales ou à l'utilisation du
-    site, vous pouvez nous contacter à <strong>emmavigbe1@gmail.com</strong>
-    ou via WhatsApp au <strong>+228 70 16 33 74</strong>.<br/>
+    site, vous pouvez nous contacter à <a href="mailto:emmavigbe1@gmail.com" style="color:var(--gold);font-weight:600"><strong>emmavigbe1@gmail.com</strong></a>
+    ou via WhatsApp au <a href="tel:+22870163374" style="color:var(--gold);font-weight:600"><strong>+228 70 16 33 74</strong></a>.<br/>
     Adresse : <strong>Zossimé, Lomé-Togo</strong>.
   </p>
 
   <a href="#" class="legal-back" onclick="showSection('home'); return false;">← Retour à l'accueil</a>
 </section>
 
-<div id="toast">✓ Ajouté ! Cliquez sur 🛒 Panier pour commander</div>
-<div class="cart-hint-bubble" id="cart-hint-bubble">👉 Cliquez ici pour finaliser votre commande</div>
+<div id="toast"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Ajouté ! Cliquez sur <svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M3 3h2l2.2 11.4a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 7H6"/></svg> Panier pour commander</div>
+<div class="cart-hint-bubble" id="cart-hint-bubble"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15"/><path d="M13 6l6 6-6 6"/></svg> Cliquez ici pour finaliser votre commande</div>
 
-<!-- ─── ÉCRAN DE BLOCAGE HORS-LIGNE ─── -->
+<!-- ÉCRAN DE BLOCAGE HORS-LIGNE -->
 <div class="offline-overlay" id="offline-overlay">
   <div class="offline-box">
-    <div class="offline-icon">📡</div>
+    <div class="offline-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18"/><path d="M6 12.7a15 15 0 0 1 3.8-2.3"/><path d="M9.7 4.1A15 15 0 0 1 21 8.6"/><path d="M9 16.4a5 5 0 0 1 6.7-.3"/><circle cx="12" cy="20" r="1"/></svg></div>
     <h3>Pas de connexion internet</h3>
     <p>Veuillez vérifier votre connexion Wi-Fi ou vos données mobiles pour continuer à naviguer sur le site LA CLE CS.</p>
   </div>
 </div>
 
-<!-- ─── LIGHTBOX : aperçu image produit en grand ─── -->
+<!-- LIGHTBOX : aperçu image produit en grand -->
 <div class="lightbox-overlay" id="modal-lightbox" onclick="closeLightbox(event)">
-  <button class="lightbox-close" onclick="closeLightbox(event)">✕</button>
+  <button class="lightbox-close" onclick="closeLightbox(event)"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
   <div class="lightbox-content" onclick="event.stopPropagation()">
     <img id="lightbox-img" src="" alt=""/>
     <div class="lightbox-caption" id="lightbox-caption"></div>
   </div>
 </div>
 
-<!-- ─── FICHE PRODUIT : aperçu rapide (image ou prix) ─── -->
+<!-- FICHE PRODUIT : aperçu rapide (image ou prix) -->
 <div class="modal-overlay" id="modal-product">
   <div class="modal" id="pm-modal-box">
     <div class="pm-header">
-      <button class="close-btn" onclick="closeProductModal()">✕</button>
+      <button class="close-btn" onclick="closeProductModal()"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
     </div>
     <div class="pm-body" id="pm-body">
       <!-- rempli dynamiquement par openProductModal() -->
@@ -1495,8 +1541,8 @@
       <div class="step" id="step3"><div class="dot">3</div> Facture</div>
     </div>
     <div class="modal-header">
-      <h2 id="modal-title">🛒 Mon Panier</h2>
-      <button class="close-btn" onclick="closeModals()">✕</button>
+      <h2 id="modal-title"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M3 3h2l2.2 11.4a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 7H6"/></svg> Mon Panier</h2>
+      <button class="close-btn" id="cart-modal-close-btn" onclick="closeModals()"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
     </div>
 
     <div id="view-cart" class="cart-body">
@@ -1534,20 +1580,20 @@
           <label>Adresse de livraison *</label>
           <textarea id="f-adresse" placeholder="Rue, quartier, ville..."></textarea>
         </div>
-        <button class="btn-primary" onclick="submitOrder()">✓ Confirmer la commande</button>
+        <button class="btn-primary" onclick="submitOrder()"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Confirmer la commande</button>
         <button class="btn-secondary" onclick="backToCart()">← Retour au panier</button>
       </div>
     </div>
 
     <div id="view-thanks" class="thanks-body" style="display:none">
-      <div class="thanks-icon">🙏</div>
+      <div class="thanks-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7.5-4.6-9.8-9.4A5.5 5.5 0 0 1 12 6.3a5.5 5.5 0 0 1 9.8 5.3C19.5 16.4 12 21 12 21z"/></svg></div>
       <h2>Merci pour votre commande !</h2>
       <p>Votre commande a bien été enregistrée.</p>
       <p>Pour accélérer le traitement, confirmez votre commande directement
         sur WhatsApp en un clic — le message est déjà prêt.</p>
       <div class="order-id" id="order-id-display"></div>
-      <button class="btn-primary" id="whatsapp-confirm-btn" onclick="confirmOrderViaWhatsapp()" style="background:var(--whatsapp);color:#fff">💬 Confirmer ma commande via WhatsApp</button>
-      <button class="btn-secondary" onclick="showInvoice()">📄 Voir ma facture</button>
+      <button class="btn-primary" id="whatsapp-confirm-btn" onclick="confirmOrderViaWhatsapp()" style="background:var(--whatsapp);color:#fff"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4.5h16v12H8.5L4 20.5V4.5z"/></svg> Confirmer ma commande via WhatsApp</button>
+      <button class="btn-secondary" onclick="showInvoice()"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15H6V2z"/><path d="M15 2v5h5"/><path d="M9 13h6M9 17h6"/></svg> Voir ma facture</button>
     </div>
 
     <div id="view-invoice" class="invoice-body" style="display:none">
@@ -1591,23 +1637,23 @@
       </div>
       <div class="invoice-note">
         Merci pour votre confiance. Cette facture est générée automatiquement.<br>
-        Pour toute question, contactez-nous à emmavigbe1@gmail.com ou sur WhatsApp au +228 70 16 33 74.
+        Pour toute question, contactez-nous à <a href="mailto:emmavigbe1@gmail.com" style="color:var(--gold)">emmavigbe1@gmail.com</a> ou sur WhatsApp au <a href="tel:+22870163374" style="color:var(--gold)">+228 70 16 33 74</a>.
       </div>
-      <button class="btn-primary" style="margin-top:24px" onclick="downloadInvoice()">⬇ Télécharger la facture</button>
-      <button class="btn-secondary" onclick="finishShopping()">🏠 Retour à la boutique</button>
+      <button class="btn-primary" style="margin-top:24px" onclick="downloadInvoice()"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg> Télécharger la facture</button>
+      <button class="btn-secondary" onclick="finishShopping()"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg> Retour à la boutique</button>
     </div>
   </div>
 </div>
 
-<!-- ─── CONNEXION ESPACE GESTIONNAIRE (Firebase Authentication) ─── -->
+<!-- CONNEXION ESPACE GESTIONNAIRE (Firebase Authentication) -->
 <div class="modal-overlay" id="modal-admin-login">
   <div class="modal" style="max-width:400px">
     <div class="modal-header">
-      <h2>🔒 Espace gestionnaire</h2>
-      <button class="close-btn" onclick="closeAdminLogin()">✕</button>
+      <h2><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg> Espace gestionnaire</h2>
+      <button class="close-btn" onclick="closeAdminLogin()"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
     </div>
     <div class="cart-body">
-      <p id="admin-login-error">✗ Email ou mot de passe incorrect.</p>
+      <p id="admin-login-error"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg> Email ou mot de passe incorrect.</p>
       <div class="form-group">
         <label>Email</label>
         <input type="email" id="admin-email-input" placeholder="votre@email.com" autocomplete="username"/>
@@ -1622,14 +1668,7 @@
 </div>
 
 <script>
-// ════════════════════════════════════════════════════
-//  ✏️  MODIFIE ICI TES PRODUITS
-//  - name   : nom du produit
-//  - desc   : courte description
-//  - price  : prix en FCFA
-//  - image  : chemin vers ton image (ex: "images/chemise.jpg")
-//             → laisse "" si tu n'as pas encore l'image
-// ════════════════════════════════════════════════════
+// Liste des produits : name, desc, price (FCFA), image (chemin ou "" si absente)
 const PRODUCTS = [
   {
     id: 1,
@@ -1864,15 +1903,11 @@ const PRODUCTS = [
   },
 ];
 
-// ════════════════════════════════════════════════════
-//  📞 CONTACT — Numéro WhatsApp / SMS de la boutique
-// ════════════════════════════════════════════════════
-const SHOP_PHONE_INTL = "22870163374"; // +228 70 16 33 74 (format international sans le +)
+// Numéro WhatsApp / SMS de la boutique
+const SHOP_PHONE_INTL = "22870163374"; // +228 70 16 33 74
 const SHOP_PHONE_SMS  = "+22870163374";
 
-// ════════════════════════════════════════════════════
-//  🔥 FIREBASE + 📧 EMAILJS — Ne pas modifier sauf si tu changes de compte
-// ════════════════════════════════════════════════════
+// Firebase + EmailJS — ne pas modifier sauf changement de compte
 const firebaseConfig = {
   apiKey: "AIzaSyDDp0jBx4cknITFuaGIrDCnWPhPwiahTLo",
   authDomain: "boutique-la-cle-cs.firebaseapp.com",
@@ -1963,7 +1998,7 @@ function imgHTML(p, height = '220px') {
   }
   return `<div class="product-img-wrap clickable" style="height:${height}" onclick="openProductModal(${p.id})">
     <div class="placeholder">
-      <div class="ph-icon">📷</div>
+      <div class="ph-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6.5" width="18" height="13.5" rx="2"/><circle cx="12" cy="13.3" r="3.6"/><path d="M8 6.5l1.3-2h5.4l1.3 2"/></svg></div>
       <span>Ajoute ton image ici<br><code>image: "images/nom.jpg"</code></span>
     </div>
   </div>`;
@@ -1974,10 +2009,10 @@ function thumbHTML(p) {
   if (p.image) {
     return `<div class="cart-item-thumb"><img src="${p.image}" alt="${p.name}"/></div>`;
   }
-  return `<div class="cart-item-thumb"><div class="thumb-placeholder">🛍️</div></div>`;
+  return `<div class="cart-item-thumb"><div class="thumb-placeholder"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1 12.5H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></div></div>`;
 }
 
-// ─── Lightbox : aperçu image produit en grand (depuis la fiche produit) ───
+// Lightbox : aperçu image produit en grand (depuis la fiche produit)
 function openLightbox(imageSrc, productName) {
   document.getElementById('lightbox-img').src = imageSrc;
   document.getElementById('lightbox-img').alt = productName;
@@ -1989,7 +2024,7 @@ function closeLightbox(e) {
   document.getElementById('modal-lightbox').classList.remove('open');
 }
 
-// ─── Fiche produit : aperçu rapide (ouverte via l'image ou le prix) ───
+// Fiche produit : aperçu rapide (ouverte via l'image ou le prix)
 function buildWhatsappLink(p) {
   const msg = `Bonjour LA CLE CS ! Je suis intéressé(e) par « ${p.name} » (${fmt(p.price)}). Est-il disponible ?`;
   return `https://wa.me/${SHOP_PHONE_INTL}?text=${encodeURIComponent(msg)}`;
@@ -2004,7 +2039,7 @@ function renderProductModalBody(p) {
     ? `<div class="pm-img-wrap" onclick="openLightbox('${p.image}', '${p.name.replace(/'/g, "\\'")}')">
          <img src="${p.image}" alt="${p.name}" onerror="handleImgError(this)"/>
        </div>`
-    : `<div class="pm-img-wrap"><div class="placeholder"><div class="ph-icon">📷</div><span>Image à venir</span></div></div>`;
+    : `<div class="pm-img-wrap"><div class="placeholder"><div class="ph-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6.5" width="18" height="13.5" rx="2"/><circle cx="12" cy="13.3" r="3.6"/><path d="M8 6.5l1.3-2h5.4l1.3 2"/></svg></div><span>Image à venir</span></div></div>`;
 
   document.getElementById('pm-body').innerHTML = `
     ${imgBlock}
@@ -2022,8 +2057,8 @@ function renderProductModalBody(p) {
     <div class="pm-actions">
       <button class="btn-primary" style="margin-top:0" onclick="addToCartFromModal(${p.id})">+ Ajouter au panier</button>
       <div class="pm-contact-row">
-        <a class="pm-btn-whatsapp" href="${buildWhatsappLink(p)}" target="_blank" rel="noopener">💬 WhatsApp</a>
-        <a class="pm-btn-sms" href="${buildSmsLink(p)}">✉️ SMS</a>
+        <a class="pm-btn-whatsapp" href="${buildWhatsappLink(p)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4.5h16v12H8.5L4 20.5V4.5z"/></svg> WhatsApp</a>
+        <a class="pm-btn-sms" href="${buildSmsLink(p)}"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 6.5l9 6.5 9-6.5"/></svg> SMS</a>
       </div>
     </div>
   `;
@@ -2118,7 +2153,7 @@ function renderProducts() {
   if (filtered.length === 0) {
     grid.innerHTML = `
       <div class="no-results">
-        <div class="icon">🔎</div>
+        <div class="icon"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.3-4.3"/></svg></div>
         <p>Aucun produit ne correspond à « ${term} ».<br>Essayez un autre mot-clé.</p>
       </div>`;
     return;
@@ -2172,10 +2207,15 @@ function getCartTotal() {
   }, 0);
 }
 
-function showToast() {
+const DEFAULT_TOAST_TEXT = '<svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Ajouté ! Cliquez sur <svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M3 3h2l2.2 11.4a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 7H6"/></svg> Panier pour commander';
+function showToast(msg) {
   const t = document.getElementById('toast');
+  t.innerHTML = msg || DEFAULT_TOAST_TEXT;
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2200);
+  setTimeout(() => {
+    t.classList.remove('show');
+    t.innerHTML = DEFAULT_TOAST_TEXT;
+  }, 2200);
 }
 
 // Fait pulser le bouton panier + affiche une bulle guidant le client
@@ -2199,13 +2239,31 @@ function openCart() {
   const bubble = document.getElementById('cart-hint-bubble');
   bubble.classList.remove('show');
   document.getElementById('cart-btn').classList.remove('cart-hint-pulse');
+  if (requireWhatsappConfirm) {
+    // Une confirmation WhatsApp est en attente : on reste sur cet écran
+    // plutôt que de repartir sur la vue panier.
+    document.getElementById('modal-cart').classList.add('open');
+    const wBtn = document.getElementById('whatsapp-confirm-btn');
+    if (wBtn) { wBtn.classList.remove('ready-pulse'); void wBtn.offsetWidth; wBtn.classList.add('ready-pulse'); }
+    return;
+  }
   setStep(1); showView('cart');
-  document.getElementById('modal-title').textContent = '🛒 Mon Panier';
+  document.getElementById('modal-title').innerHTML = '<svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M3 3h2l2.2 11.4a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 7H6"/></svg> Mon Panier';
   renderCartView();
   document.getElementById('modal-cart').classList.add('open');
 }
 
+// Empêche la fermeture du panier tant que le client n'a pas confirmé
+// sa commande via WhatsApp (obligatoire après une commande passée).
+let requireWhatsappConfirm = false;
+
 function closeModals() {
+  if (requireWhatsappConfirm) {
+    const btn = document.getElementById('whatsapp-confirm-btn');
+    if (btn) { btn.classList.remove('ready-pulse'); void btn.offsetWidth; btn.classList.add('ready-pulse'); }
+    showToast('<svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg> Merci de confirmer via WhatsApp avant de fermer');
+    return;
+  }
   document.getElementById('modal-cart').classList.remove('open');
 }
 
@@ -2232,7 +2290,7 @@ function renderCartView() {
   const container = document.getElementById('cart-items');
   const summary = document.getElementById('cart-summary');
   if (cart.length === 0) {
-    container.innerHTML = `<div class="cart-empty"><div class="icon">🛒</div>Votre panier est vide</div>`;
+    container.innerHTML = `<div class="cart-empty"><div class="icon"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M3 3h2l2.2 11.4a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 7H6"/></svg></div>Votre panier est vide</div>`;
     summary.style.display = 'none';
     return;
   }
@@ -2250,7 +2308,7 @@ function renderCartView() {
           <span class="qty-val">${item.qty}</span>
           <button class="qty-btn" onclick="changeQty(${p.id},1)">+</button>
         </div>
-        <button class="remove-btn" onclick="removeFromCart(${p.id})">🗑</button>
+        <button class="remove-btn" onclick="removeFromCart(${p.id})"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M9.5 7V5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v2"/><path d="M6.5 7l1 13.2a1 1 0 0 0 1 .8h6.8a1 1 0 0 0 1-.8L17.5 7"/></svg></button>
       </div>`;
   }).join('');
   const total = getCartTotal();
@@ -2262,13 +2320,13 @@ function renderCartView() {
 function goToOrder() {
   if (cart.length === 0) return;
   setStep(2); showView('order');
-  document.getElementById('modal-title').textContent = '📋 Informations de commande';
+  document.getElementById('modal-title').innerHTML = '<svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="12" height="16" rx="2"/><path d="M9 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1"/><path d="M9 10h6M9 14h6"/></svg> Informations de commande';
   initOrderFormGuide();
 }
 
 function backToCart() {
   setStep(1); showView('cart');
-  document.getElementById('modal-title').textContent = '🛒 Mon Panier';
+  document.getElementById('modal-title').innerHTML = '<svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M3 3h2l2.2 11.4a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 7H6"/></svg> Mon Panier';
   renderCartView();
 }
 
@@ -2280,7 +2338,7 @@ function showFormError(msg) {
     el.id = 'form-error';
     document.getElementById('order-form-section').prepend(el);
   }
-  el.textContent = '⚠ ' + msg;
+  el.innerHTML = '<svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg> ' + msg;
   el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 function clearFormError() {
@@ -2293,11 +2351,8 @@ function markFieldError(id, isError) {
   if (el) el.classList.toggle('field-error', isError);
 }
 
-// ════════════════════════════════════════════════════
-//  ✨ GUIDAGE VISUEL DU FORMULAIRE DE COMMANDE
-//  Anime le champ suivant à remplir, puis fait pulser
-//  le bouton de confirmation une fois tout complété.
-// ════════════════════════════════════════════════════
+// Guide visuel du formulaire de commande : anime le champ suivant à
+// remplir, puis fait pulser le bouton de confirmation une fois complété.
 const ORDER_FIELD_SEQUENCE = ['f-prenom', 'f-nom', 'f-email', 'f-adresse'];
 let orderGuideAttached = false;
 
@@ -2339,14 +2394,8 @@ function initOrderFormGuide() {
   });
 }
 
-// ════════════════════════════════════════════════════
-//  📍 LOCALISATION CLIENT — capture silencieuse au moment
-//  de la commande. Si le client autorise le partage de
-//  position, ses coordonnées GPS précises sont enregistrées
-//  avec la commande (en plus de l'adresse saisie). Sinon,
-//  la commande part quand même : le livreur s'appuiera sur
-//  l'adresse texte via le bouton "📍 Livraison" côté gestionnaire.
-// ════════════════════════════════════════════════════
+// Géolocalisation client au moment de la commande (optionnelle) :
+// si autorisée, les coordonnées GPS accompagnent l'adresse texte.
 function captureClientGeolocation(timeoutMs = 6000) {
   return new Promise(resolve => {
     if (!navigator.geolocation) { resolve(null); return; }
@@ -2440,8 +2489,13 @@ async function submitOrder() {
   );
 
   setStep(3); showView('thanks');
-  document.getElementById('modal-title').textContent = '✅ Commande confirmée';
+  document.getElementById('modal-title').innerHTML = '<svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M8 12.3l2.7 2.7 5.3-6"/></svg> Commande confirmée';
   document.getElementById('order-id-display').textContent = orderNum;
+  requireWhatsappConfirm = true;
+  document.getElementById('cart-modal-close-btn').classList.add('locked');
+  const wBtn = document.getElementById('whatsapp-confirm-btn');
+  wBtn.classList.add('ready-pulse');
+  wBtn.disabled = false;
 }
 
 // Construit le message de confirmation de commande et ouvre WhatsApp
@@ -2470,11 +2524,18 @@ Adresse : ${o.client.adresse}
 Paiement : Paiement à la livraison`;
 
   window.open(`https://wa.me/${SHOP_PHONE_INTL}?text=${encodeURIComponent(msg)}`, '_blank');
+
+  requireWhatsappConfirm = false;
+  document.getElementById('cart-modal-close-btn').classList.remove('locked');
+  const wBtn = document.getElementById('whatsapp-confirm-btn');
+  wBtn.classList.remove('ready-pulse');
+  wBtn.innerHTML = '<svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Commande confirmée sur WhatsApp';
+  showToast('<svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Merci ! Vous pouvez fermer la fenêtre.');
 }
 
 function showInvoice() {
   showView('invoice');
-  document.getElementById('modal-title').textContent = '📄 Facture';
+  document.getElementById('modal-title').innerHTML = '<svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15H6V2z"/><path d="M15 2v5h5"/><path d="M9 13h6M9 17h6"/></svg> Facture';
   const o = currentOrder;
   document.getElementById('inv-num').textContent           = o.num;
   document.getElementById('inv-date').textContent          = o.date;
@@ -2602,6 +2663,7 @@ async function downloadInvoice() {
 }
 
 function finishShopping() {
+  if (requireWhatsappConfirm) { closeModals(); return; }
   cart = []; saveCart(); updateCartCount(); closeModals();
 }
 
@@ -2629,9 +2691,7 @@ function fmt(n) {
   return new Intl.NumberFormat('fr-FR').format(n) + ' FCFA';
 }
 
-// ════════════════════════════════════════════════════
-//  🔒 ESPACE GESTIONNAIRE — Authentification Firebase
-// ════════════════════════════════════════════════════
+// Espace gestionnaire — authentification Firebase
 function openAdminLogin() {
   if (auth.currentUser) { showSection('admin'); loadAdminOrders(); return; }
   document.getElementById('admin-login-error').style.display = 'none';
@@ -2716,13 +2776,13 @@ function renderAdminOrders() {
         <span class="admin-order-date">${escapeHTML(o.date)}</span>
       </div>
       <div class="admin-order-client">${escapeHTML(o.prenom)} ${escapeHTML(o.nom)}</div>
-      <div class="admin-order-contact">${escapeHTML(o.email)}${o.tel ? ' • ' + escapeHTML(o.tel) : ''}${o.adresse ? ' • ' + escapeHTML(o.adresse) : ''}</div>
+      <div class="admin-order-contact">${o.email ? `<a href="mailto:${escapeHTML(o.email)}" class="admin-contact-link">${escapeHTML(o.email)}</a>` : ''}${o.tel ? ' • <a href="tel:' + escapeHTML(o.tel) + '" class="admin-contact-link">' + escapeHTML(o.tel) + '</a>' : ''}${o.adresse ? ' • ' + escapeHTML(o.adresse) : ''}</div>
       <div class="admin-order-items">${escapeHTML(o.itemsText || '')}</div>
       <div class="admin-order-bottom">
         <span class="admin-order-total">${fmt(o.total)}</span>
         <div class="admin-order-actions">
-          <button class="admin-delivery-btn${o.geo && typeof o.geo.lat === 'number' ? '' : ' no-geo'}" onclick="openDeliveryLocation('${escapeHTML(o.num)}')" title="${o.geo && typeof o.geo.lat === 'number' ? 'Position GPS précise du client' : 'Ouvrir l\u2019adresse indiquée sur la carte'}">📍 Livraison</button>
-          <button class="admin-pdf-btn" onclick="generateAdminInvoice('${escapeHTML(o.num)}')">📄 Générer la facture PDF</button>
+          <button class="admin-delivery-btn${o.geo && typeof o.geo.lat === 'number' ? '' : ' no-geo'}" onclick="openDeliveryLocation('${escapeHTML(o.num)}')" title="${o.geo && typeof o.geo.lat === 'number' ? 'Position GPS précise du client' : 'Ouvrir l\u2019adresse indiquée sur la carte'}"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-7.4 7-12.5A7 7 0 0 0 5 9.5C5 14.6 12 22 12 22z"/><circle cx="12" cy="9.5" r="2.5"/></svg> Livraison</button>
+          <button class="admin-pdf-btn" onclick="generateAdminInvoice('${escapeHTML(o.num)}')"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15H6V2z"/><path d="M15 2v5h5"/><path d="M9 13h6M9 17h6"/></svg> Générer la facture PDF</button>
         </div>
       </div>
     </div>
@@ -2736,8 +2796,14 @@ function openDeliveryLocation(orderNum) {
   const o = adminOrdersCache.find(ord => ord.num === orderNum);
   if (!o) return;
 
+  // Nom affiché sur l'épingle Google Maps — permet au livreur de repérer
+  // immédiatement CE point précis (client + commande) parmi tous les
+  // autres lieux/commerces visibles sur la carte.
+  const pinLabel = `Client ${o.prenom || ''} ${o.nom || ''} — LA CLE CS — ${o.num}`.trim();
+
   if (o.geo && typeof o.geo.lat === 'number' && typeof o.geo.lng === 'number') {
-    window.open(`https://www.google.com/maps?q=${o.geo.lat},${o.geo.lng}`, '_blank');
+    const url = `https://www.google.com/maps?q=${o.geo.lat},${o.geo.lng}(${encodeURIComponent(pinLabel)})&z=18`;
+    window.open(url, '_blank');
     return;
   }
 
@@ -2768,9 +2834,7 @@ auth.onAuthStateChanged(user => {
   }
 });
 
-// ════════════════════════════════════════════════════
-//  📡 DÉTECTION DE CONNEXION — bloque la navigation hors-ligne
-// ════════════════════════════════════════════════════
+// Détection de connexion — bloque la navigation hors-ligne
 function updateOnlineStatus() {
   document.getElementById('offline-overlay').classList.toggle('show', !navigator.onLine);
 }
