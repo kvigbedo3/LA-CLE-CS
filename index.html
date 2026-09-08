@@ -402,6 +402,18 @@
     0%, 100% { box-shadow: 0 0 0 0 rgba(201,168,76,0.55); }
     50% { box-shadow: 0 0 0 10px rgba(201,168,76,0); }
   }
+  /* Bouton "Confirmer la commande" : visiblement en veille tant que le
+     formulaire n'est pas complet, puis s'anime clairement une fois prêt. */
+  #order-form-section .btn-primary {
+    background: #555; color: #bbb; opacity: 0.75;
+  }
+  #order-form-section .btn-primary:hover { background: #555; transform: none; }
+  #order-form-section .btn-primary.ready-pulse {
+    background: var(--gold); color: var(--dark); opacity: 1;
+  }
+  #order-form-section .btn-primary.ready-pulse:hover {
+    background: var(--gold-light); transform: scale(1.02);
+  }
   .form-group input.field-guide-pulse,
   .form-group textarea.field-guide-pulse {
     animation: fieldGuidePulse 0.9s ease-in-out 2;
@@ -1201,10 +1213,10 @@
 <div class="call-banner">
   <a href="tel:+22870163374">
     <span class="call-banner-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.6 2h3.5l1.2 5-2.3 2.3a13 13 0 0 0 6.7 6.7l2.3-2.3 5 1.2v3.5a2 2 0 0 1-2.2 2C10.4 19.6 4.4 13.6 4.6 4.2A2 2 0 0 1 6.6 2z"/></svg></span>
-    Rejoignez-nous par Appel téléphonique au <strong>+228 70 16 33 74</strong> — Nous sommes à votre entière disposition.
+    Rejoignez-nous par appel téléphonique au <strong>+228 70 16 33 74</strong> — nous sommes à votre entière disposition.
   </a>
 </div>
- 
+
 <nav class="main-nav" aria-label="Navigation principale">
   <button class="nav-btn active" onclick="showSection('home', this)"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg> Accueil</button>
   <button class="nav-btn" onclick="showSection('products', this)"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1 12.5H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg> Nos produits</button>
@@ -1593,7 +1605,6 @@
         sur WhatsApp en un clic — le message est déjà prêt.</p>
       <div class="order-id" id="order-id-display"></div>
       <button class="btn-primary" id="whatsapp-confirm-btn" onclick="confirmOrderViaWhatsapp()" style="background:var(--whatsapp);color:#fff"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4.5h16v12H8.5L4 20.5V4.5z"/></svg> Confirmer ma commande via WhatsApp</button>
-      <button class="btn-secondary" onclick="showInvoice()"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15H6V2z"/><path d="M15 2v5h5"/><path d="M9 13h6M9 17h6"/></svg> Voir ma facture</button>
     </div>
 
     <div id="view-invoice" class="invoice-body" style="display:none">
