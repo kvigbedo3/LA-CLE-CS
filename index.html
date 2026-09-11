@@ -1143,6 +1143,8 @@
   .admin-contact-link { color: var(--gold); text-decoration: none; font-weight: 600; }
   .admin-contact-link:hover { text-decoration: underline; color: var(--gold-light); }
   .admin-order-items { color: #ccc; font-size: 0.85rem; margin-bottom: 10px; line-height: 1.5; }
+  .admin-geo-accuracy { color: var(--success); font-size: 0.78rem; margin-bottom: 8px; }
+  .admin-geo-accuracy.low { color: var(--gold-light); }
   .admin-order-bottom {
     display: flex; justify-content: space-between; align-items: center;
     flex-wrap: wrap; gap: 10px;
@@ -2422,27 +2424,38 @@ function initOrderFormGuide() {
 
 // Géolocalisation client au moment de la commande (optionnelle) :
 // si autorisée, les coordonnées GPS accompagnent l'adresse texte.
-function captureClientGeolocation(timeoutMs = 6000) {
+// Capture une position GPS précise : écoute plusieurs lectures pendant
+// la fenêtre de temps impartie, garde la plus précise, et s'arrête dès
+// qu'une précision satisfaisante (≤ 25 m) est atteinte. N'utilise jamais
+// une position mise en cache (maximumAge: 0), contrairement à une simple
+// lecture unique qui peut renvoyer une vieille position approximative.
+function captureClientGeolocation(timeoutMs = 15000) {
   return new Promise(resolve => {
     if (!navigator.geolocation) { resolve(null); return; }
     let settled = false;
-    const timer = setTimeout(() => {
+    let best = null;
+    let watchId = null;
+
+    function finish() {
       if (settled) return;
       settled = true;
-      resolve(null);
-    }, timeoutMs);
-    navigator.geolocation.getCurrentPosition(
+      clearTimeout(timer);
+      if (watchId !== null) navigator.geolocation.clearWatch(watchId);
+      resolve(best);
+    }
+
+    const timer = setTimeout(finish, timeoutMs);
+
+    watchId = navigator.geolocation.watchPosition(
       pos => {
-        if (settled) return;
-        settled = true; clearTimeout(timer);
-        resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        const accuracy = pos.coords.accuracy; // précision en mètres
+        if (!best || accuracy < best.accuracy) {
+          best = { lat: pos.coords.latitude, lng: pos.coords.longitude, accuracy };
+        }
+        if (accuracy <= 25) finish();
       },
-      () => {
-        if (settled) return;
-        settled = true; clearTimeout(timer);
-        resolve(null); // refusé, indisponible ou timeout — on continue sans bloquer la commande
-      },
-      { enableHighAccuracy: true, timeout: timeoutMs, maximumAge: 120000 }
+      () => finish(), // refusé/indisponible — on garde la meilleure lecture déjà obtenue (peut être null)
+      { enableHighAccuracy: true, maximumAge: 0, timeout: timeoutMs }
     );
   });
 }
@@ -2807,6 +2820,7 @@ function renderAdminOrders() {
       </div>
       <div class="admin-order-client">${escapeHTML(o.prenom)} ${escapeHTML(o.nom)}</div>
       <div class="admin-order-contact">${o.email ? `<a href="mailto:${escapeHTML(o.email)}" class="admin-contact-link">${escapeHTML(o.email)}</a>` : ''}${o.tel ? ' • <a href="tel:' + escapeHTML(o.tel) + '" class="admin-contact-link">' + escapeHTML(o.tel) + '</a>' : ''}${o.adresse ? ' • ' + escapeHTML(o.adresse) : ''}</div>
+      ${o.geo && typeof o.geo.accuracy === 'number' ? `<div class="admin-geo-accuracy${o.geo.accuracy > 100 ? ' low' : ''}">Précision GPS : ±${Math.round(o.geo.accuracy)} m</div>` : ''}
       <div class="admin-order-items">${escapeHTML(o.itemsText || '')}</div>
       <div class="admin-order-bottom">
         <span class="admin-order-total">${fmt(o.total)}</span>
