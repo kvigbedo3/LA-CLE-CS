@@ -2168,6 +2168,12 @@ const SEED_PRODUCTS = [
 const SHOP_PHONE_INTL = "22878956994"; // +228 78 95 69 94
 const SHOP_PHONE_SMS  = "+22878956994"; // pour SMS (WhatsApp ne fonctionne pas avec le +)
 
+// IMPORTANT : cette variable est déclarée ici, tout en haut, AVANT le bloc
+// Firebase/EmailJS ci-dessous. Si jamais ce bloc échoue (bloqueur de pub,
+// coupure réseau, etc.), le reste du script (panier, boutons...) continue
+// quand même de fonctionner correctement.
+let requireWhatsappConfirm = false;
+
 // Firebase + EmailJS — ne pas modifier sauf changement de compte
 const firebaseConfig = {
   apiKey: "AIzaSyDDp0jBx4cknITFuaGIrDCnWPhPwiahTLo",
@@ -2177,11 +2183,21 @@ const firebaseConfig = {
   messagingSenderId: "135351894948",
   appId: "1:135351894948:web:b7dddc70699167aab1b731"
 };
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-const auth = firebase.auth();
+let db = null;
+let auth = null;
+try {
+  firebase.initializeApp(firebaseConfig);
+  db = firebase.firestore();
+  auth = firebase.auth();
+} catch (err) {
+  console.error('Firebase (initialisation) error:', err);
+}
 
-emailjs.init({ publicKey: "W7nWsm1fo6YWUN7Q5" });
+try {
+  emailjs.init({ publicKey: "W7nWsm1fo6YWUN7Q5" });
+} catch (err) {
+  console.error('EmailJS (initialisation) error:', err);
+}
 const EMAILJS_SERVICE_ID       = "service_ehgkibh";
 const EMAILJS_TEMPLATE_OWNER   = "template_d9s71pc"; // notification pour vous
 const EMAILJS_TEMPLATE_CLIENT  = "template_i5seo4f"; // confirmation pour le client
@@ -2214,12 +2230,17 @@ function notifyClient(clientEmail, clientName, messageText) {
 function trackVisit() {
   if (sessionStorage.getItem('visit_notified')) return;
   sessionStorage.setItem('visit_notified', '1');
-  const now = new Date().toLocaleString('fr-FR');
-  db.collection('visits').add({
-    timestamp: now,
-    page: location.href,
-    userAgent: navigator.userAgent
-  }).catch(err => console.error('Firestore (visit) error:', err));
+  if (!db) return;
+  try {
+    const now = new Date().toLocaleString('fr-FR');
+    db.collection('visits').add({
+      timestamp: now,
+      page: location.href,
+      userAgent: navigator.userAgent
+    }).catch(err => console.error('Firestore (visit) error:', err));
+  } catch (err) {
+    console.error('Firestore (visit) error:', err);
+  }
 }
 
 let cart = JSON.parse(localStorage.getItem('cart') || '[]');
@@ -2583,7 +2604,7 @@ function openCart() {
 
 // Empêche la fermeture du panier tant que le client n'a pas confirmé
 // sa commande via WhatsApp (obligatoire après une commande passée).
-let requireWhatsappConfirm = false;
+// (déclaration de requireWhatsappConfirm déplacée en haut du script)
 
 function closeModals() {
   if (requireWhatsappConfirm) {
@@ -3341,11 +3362,13 @@ async function generateAdminInvoice(orderNum) {
 }
 
 // Si l'utilisateur est déjà connecté (session précédente), garde-le connecté silencieusement
-auth.onAuthStateChanged(user => {
-  if (user) {
-    document.getElementById('admin-who').textContent = user.email;
-  }
-});
+if (auth) {
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      document.getElementById('admin-who').textContent = user.email;
+    }
+  });
+}
 
 // Détection de connexion — bloque la navigation hors-ligne
 function updateOnlineStatus() {
