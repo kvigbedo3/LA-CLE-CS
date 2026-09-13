@@ -152,6 +152,33 @@
     background: linear-gradient(to right, var(--gold), transparent);
   }
 
+  /* FILTRES PAR CATÉGORIE */
+  .category-filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    max-width: 720px;
+    margin: 0 auto 28px;
+  }
+  .category-pill {
+    border: 1px solid #3a3a3a;
+    background: #1a1a1a;
+    color: var(--light);
+    border-radius: 999px;
+    padding: 9px 16px;
+    font: 600 0.82rem 'DM Sans', sans-serif;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: .2s ease;
+  }
+  .category-pill:hover, .category-pill.active {
+    background: var(--gold);
+    color: var(--dark);
+    border-color: var(--gold);
+    transform: translateY(-1px);
+  }
+
   /* BARRE DE RECHERCHE */
   .search-wrap {
     position: relative;
@@ -1267,6 +1294,9 @@
   <section id="products-page" class="page-section products-section">
   <div class="section-title">Nos Produits</div>
 
+  <!-- FILTRES PAR CATÉGORIE -->
+  <div class="category-filters" id="category-filters"></div>
+
   <!-- BARRE DE RECHERCHE -->
   <div class="search-wrap">
     <span class="search-icon"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.3-4.3"/></svg></span>
@@ -1700,261 +1730,335 @@
 const PRODUCTS = [
   {
     id: 1,
+    category: "telephonie",
     name: "Telephone à touche (1+1)",
     desc: "Itel, Samsung et beaucoup d'autres marques.",
-    price: "3500 FCFA",
+    price: 3500,
+    priceLabel: "3500 FCFA",
     image: "imagess/Telephone.png"
   },
   {
     id: 2,
+    category: "telephonie",
     name: "Telephone Android",
     desc: " Motorola, Huawei et beaucoup d'autres marques.",
-    price: "A partir de 25000 FCFA",
+    price: 25000,
+    priceLabel: "A partir de 25000 FCFA",
     image: "imagess/Android.png"
   },
   {
     id: 3,
+    category: "electromenager",
     name: "Fer à repasser",
     desc: "Fer à repasser de meilleure qualité.",
-    price: "3500 FCFA",
+    price: 3500,
+    priceLabel: "3500 FCFA",
     image: "imagess/Fer à repasser.png"
   },
   {
     id: 4,
+    category: "electromenager",
     name: "Chauffe eau",
     desc: "Chauffe eau de qualité superieure à un prix léger.",
-    price: "3500 FCFA",
+    price: 3500,
+    priceLabel: "3500 FCFA",
     image: "imagess/Chauffe eau.png"
   },
   {
     id: 5,
+    category: "electromenager",
     name: "Chauffe eau pliable",
     desc: "Chauffe eau pliable pratique et léger, idéal pour voyager ou économiser de l’espace.",
-    price: "5000 FCFA",
+    price: 5000,
+    priceLabel: "5000 FCFA",
     image: "imagess/Chauffe eau pliable.png"
   },
   {
     id: 6,
+    category: "cuisine",
     name: "Thermos en fer",
     desc: "Emportez la chaleur partout avec vous grâce à ce thermos en fer durable.",
-    price: "15000 FCFA",
+    price: 15000,
+    priceLabel: "15000 FCFA",
     image: "imagess/Thermos en fer.png"
   },
   {
     id: 7,
+    category: "cuisine",
     name: "Assiette série de 2",
     desc: "Lot de 2 assiettes solides, parfaites pour un repas quotidien.",
-    price: "7500 FCFA",
+    price: 7500,
+    priceLabel: "7500 FCFA",
     image: "imagess/Assiette serie de 2.png"
   },
   {
     id: 8,
+    category: "cuisine",
     name: "Assiette série de 3",
     desc: "Trio raffiné d’assiettes, idéal pour recevoir avec élégance.",
-    price: "12000 FCFA",
+    price: 12000,
+    priceLabel: "12000 FCFA",
     image: "imagess/Assiette serie de 3.png"
   },
   {
     id: 9,
+    category: "cuisine",
     name: "Assiette série de 4",
     desc: "Quadruple confort avec cette série d’assiettes, parfaite pour les repas en famille.",
-    price: "De 18000 FCFA à 25000 FCFA",
+    price: 18000,
+    priceLabel: "De 18000 FCFA à 25000 FCFA",
     image: "imagess/Assiette serie de 4.png"
   },
   {
     id: 10,
+    category: "cuisine",
     name: "Assiette série de 5",
     desc: "Pack avantageux de 5 assiettes, qualité et prix imbattables.",
-    price: "35000 FCFA",
+    price: 35000,
+    priceLabel: "35000 FCFA",
     image: "imagess/Assiette serie de 5.png"
   },
   {
     id: 11,
+    category: "telephonie",
     name: "Bluetooth Music",
     desc: "Connecte-toi à la liberté — ton son, partout, sans limites.",
-    price: "18000 FCFA",
+    price: 18000,
+    priceLabel: "18000 FCFA",
     image: "imagess/Bluetooth.png"
   },
   {
     id: 12,
+    category: "cuisine",
     name: "Casseroles série de 3 Lion",
     desc: "Libère ton talent culinaire avec la série de 3 casseroles Lion.",
-    price: "23000 FCFA",
+    price: 23000,
+    priceLabel: "23000 FCFA",
     image: "imagess/Casserole série de 3 lion.png"
   },
   {
     id: 13,
+    category: "electromenager",
     name: "Cuisinière à gaz",
     desc: "Cuisinière à gaz de qualité supérieure, idéale pour une cuisine efficace.",
-    price: "85000 FCFA",
+    price: 85000,
+    priceLabel: "85000 FCFA",
     image: "imagess/Cuisinière.png"
   },
   {
     id: 14,
+    category: "electromenager",
     name: "Glacière série de 4 Flora",
     desc: "Quatre formats, toutes tes sorties — la série Flora simplifie ta vie.",
-    price: "85000 FCFA",
+    price: 85000,
+    priceLabel: "85000 FCFA",
     image: "imagess/Glacière série de 4 flora.png"
   },
   {
     id: 15,
+    category: "cuisine",
     name: "Gourde 3 pièces",
     desc: "Trois formats pour toutes tes activités — la série de gourdes qui s’adapte à toi.",
-    price: "15000 FCFA",
+    price: 15000,
+    priceLabel: "15000 FCFA",
     image: "imagess/Gourde 3 pièces.png"
   },
   {
     id: 16,
+    category: "cuisine",
     name: "Gourde simple",
     desc: "Hydratation raffinée, toujours à portée de main.",
-    price: "9000 FCFA",
+    price: 9000,
+    priceLabel: "9000 FCFA",
     image: "imagess/Gourde simple.png"
   },
   {
     id: 17,
+    category: "electromenager",
     name: "Machine à coudre Flyingman",
     desc: "Flyingman — la machine à coudre polyvalente, électrique ou à pédale, conçue pour allier tradition et modernité.",
-    price: "75000 FCFA",
+    price: 75000,
+    priceLabel: "75000 FCFA",
     image: "imagess/Machine a coudre Flyingman.png"
   },
   {
     id: 18,
+    category: "electromenager",
     name: "Mixeur poudre",
     desc: "Transforme tes poudres en délices, vite et bien !",
-    price: "De 7900 FCFA à 45000 FCFA",
+    price: 7900,
+    priceLabel: "De 7900 FCFA à 45000 FCFA",
     image: "imagess/Mixeur poudre.png"
   },
   {
     id: 19,
+    category: "electromenager",
     name: "Moulinex",
     desc: "Moulinex — la puissance et la simplicité au service de ta cuisine.",
-    price: "12000 FCFA",
+    price: 12000,
+    priceLabel: "12000 FCFA",
     image: "imagess/Moulinex.png"
   },
   {
     id: 20,
+    category: "electromenager",
     name: "Refrigerateur",
     desc: "L'élégance et la performance réunies pour conserver tes aliments.",
-    price: "De 85000 FCFA à 450000 FCFA",
+    price: 85000,
+    priceLabel: "De 85000 FCFA à 450000 FCFA",
     image: "imagess/Refrigerateur.webp"
   },
   {
     id: 21,
+    category: "autres",
     name: "Test argent",
     desc: "Simple, rapide et efficace — teste ton argent en toute confiance.",
-    price: "5000 FCFA",
+    price: 5000,
+    priceLabel: "5000 FCFA",
     image: "imagess/Test argent.png"
   },
   {
     id: 22,
+    category: "electromenager",
     name: "Tondeuses",
     desc: "Libère ton style, maîtrise ta coupe avec nos tondeuses !",
-    price: "4500 FCFA",
+    price: 4500,
+    priceLabel: "4500 FCFA",
     image: "imagess/Tondeuses.png"
   },
   {
     id: 23,
+    category: "cuisine",
     name: "Verres de Paris",
     desc: "Des verres solides et raffinés pour toutes tes occasions.",
-    price: "4500 FCFA",
+    price: 4500,
+    priceLabel: "4500 FCFA",
     image: "imagess/Verres.png"
   },
   {
     id: 24,
+    category: "cuisine",
     name: "Grille de Barbecue",
     desc: "Une grille de barbecue durable et économique, parfaite pour vos soirées conviviales.",
-    price: "4500 FCFA",
+    price: 4500,
+    priceLabel: "4500 FCFA",
     image: "imagess/Grille de Barbecue.png"
   },
   {
     id: 25,
+    category: "electromenager",
     name: "Micro-ondes",
     desc: "Micro‑onde rapide et efficace, idéal pour réchauffer vos repas.",
-    price: "45000 FCFA",
+    price: 45000,
+    priceLabel: "45000 FCFA",
     image: "imagess/Micro-onde.png"
   },
   {
     id: 26,
+    category: "cuisine",
     name: "Marmite haute",
     desc: "Design raffiné en acier, alliant capacité et élégance.",
-    price: "45000 FCFA",
+    price: 45000,
+    priceLabel: "45000 FCFA",
     image: "imagess/Marmite haute.png"
   },
   {
     id: 27,
+    category: "telephonie",
     name: "Imprimante",
     desc: "Imprimante multifonctions, idéale pour ton bureau ou ta maison.",
-    price: "95000 FCFA",
+    price: 95000,
+    priceLabel: "95000 FCFA",
     image: "imagess/Imprimante.png"
   },
   {
     id: 28,
+    category: "mode",
     name: "Pagnes",
     desc: "Exprimez votre style avec nos pagnes aux motifs uniques et vibrants.",
-    price: "De 3000 FCFA à 25000 FCFA",
+    price: 3000,
+    priceLabel: "De 3000 FCFA à 25000 FCFA",
     image: "imagess/Pagnes.png"
   },
   {
     id: 29,
+    category: "cuisine",
     name: "Poele cuisine",
     desc: "Une poêle de cuisine durable et efficace, parfaite pour vos repas.",
-    price: "De 3000 FCFA à 8000 FCFA",
+    price: 3000,
+    priceLabel: "De 3000 FCFA à 8000 FCFA",
     image: "imagess/Poele cuisine.png"
   },
   {
     id: 30,
+    category: "autres",
     name: "Regulateur",
     desc: "Régulateur fiable, assure une tension stable pour vos appareils.",
-    price: "De 15000 FCFA à 35000 FCFA",
+    price: 15000,
+    priceLabel: "De 15000 FCFA à 35000 FCFA",
     image: "imagess/Regulateur.png"
   },
   {
     id: 31,
+    category: "cuisine",
     name: "Tête de gaz",
     desc: "Tête de gaz robuste, assure une cuisson rapide et sécurisée.",
-    price: "20000 FCFA",
+    price: 20000,
+    priceLabel: "20000 FCFA",
     image: "imagess/Tete de gaz.png"
   },
   {
     id: 32,
+    category: "telephonie",
     name: "TV écran plats selon leurs dimensions",
     desc: "Choisissez votre taille idéale : 32\", 43\", 55\" ou 65\", qualité et prix avantageux.",
-    price: "De 45000 FCFA à 750000 FCFA",
+    price: 45000,
+    priceLabel: "De 45000 FCFA à 750000 FCFA",
     image: "imagess/TV écran plats selon leurs dimensions.png"
   },
   {
     id: 33,
+    category: "cuisine",
     name: "Ustensiles de cuisine",
     desc: "Des ustensiles de cuisine de qualité pour tous tes repas.",
-    price: "1000 FCFA",
+    price: 1000,
+    priceLabel: "1000 FCFA",
     image: "imagess/Ustensiles de cuisine.png"
   },
   {
     id: 34,
+    category: "electromenager",
     name: "Ventilateurs",
     desc: "Des ventilateurs puissants et silencieux pour ton confort.",
-    price: "De 5000 FCFA à 25000 FCFA",
+    price: 5000,
+    priceLabel: "De 5000 FCFA à 25000 FCFA",
     image: "imagess/Ventilateurs.png"
   },
   {
     id: 35,
+    category: "mode",
     name: "Vélos",
     desc: "Des vélos confortables et performants pour ton plaisir de conduite.",
-    price: "De 35000 FCFA à 95000 FCFA",
+    price: 35000,
+    priceLabel: "De 35000 FCFA à 95000 FCFA",
     image: "imagess/Vélos.png"
   },
   {
     id: 36,
+    category: "electromenager",
     name: "Séchoir à main",
     desc: "Un séchoir à main pratique et efficace pour ton confort.",
-    price: "7000 FCFA",
+    price: 7000,
+    priceLabel: "7000 FCFA",
     image: "imagess/Séchoir à main.png"
   },
   {
     id: 37,
+    category: "electromenager",
     name: "Grand séchoir ",
     desc: "Un séchoir grand et pratique pour ta satisfaction.",
-    price: "85000 FCFA",
+    price: 85000,
+    priceLabel: "85000 FCFA",
     image: "imagess/Grand séchoir.png"
   }
 ];
@@ -2020,6 +2124,17 @@ function trackVisit() {
 let cart = JSON.parse(localStorage.getItem('cart') || '[]');
 let currentOrder = null;
 let searchTerm = '';
+let currentCategory = 'all';
+
+// Catégories affichées dans les filtres de la page Produits
+const CATEGORIES = [
+  { id: 'all',           label: 'Tous' },
+  { id: 'telephonie',    label: 'Téléphonie & Électronique' },
+  { id: 'electromenager',label: 'Électroménager' },
+  { id: 'cuisine',       label: 'Cuisine & Vaisselle' },
+  { id: 'mode',          label: 'Mode & Accessoires' },
+  { id: 'autres',        label: 'Autres' }
+];
 let pmQty = 1; // quantité sélectionnée dans la fiche produit
 let pmCurrentProduct = null;
 let adminOrdersCache = [];
@@ -2082,11 +2197,11 @@ function closeLightbox(e) {
 
 // Fiche produit : aperçu rapide (ouverte via l'image ou le prix)
 function buildWhatsappLink(p) {
-  const msg = `Bonjour LA CLE CS ! Je suis intéressé(e) par « ${p.name} » (${fmt(p.price)}). Est-il disponible ?`;
+  const msg = `Bonjour LA CLE CS ! Je suis intéressé(e) par « ${p.name} » (${p.priceLabel || fmt(p.price)}). Est-il disponible ?`;
   return `https://wa.me/${SHOP_PHONE_INTL}?text=${encodeURIComponent(msg)}`;
 }
 function buildSmsLink(p) {
-  const msg = `Bonjour LA CLE CS ! Je suis intéressé(e) par « ${p.name} » (${fmt(p.price)}). Est-il disponible ?`;
+  const msg = `Bonjour LA CLE CS ! Je suis intéressé(e) par « ${p.name} » (${p.priceLabel || fmt(p.price)}). Est-il disponible ?`;
   return `sms:${SHOP_PHONE_SMS}?&body=${encodeURIComponent(msg)}`;
 }
 
@@ -2100,7 +2215,7 @@ function renderProductModalBody(p) {
   document.getElementById('pm-body').innerHTML = `
     ${imgBlock}
     <div class="pm-name">${p.name}</div>
-    <div class="pm-price">${fmt(p.price)}</div>
+    <div class="pm-price">${p.priceLabel || fmt(p.price)}</div>
     <div class="pm-desc">${p.desc}</div>
     <div class="pm-qty-row">
       <span class="pm-qty-label">Quantité</span>
@@ -2166,14 +2281,36 @@ function highlight(text, term) {
   return text.replace(re, '<mark>$1</mark>');
 }
 
-// Filtre les produits selon le nom OU la description
+// Filtre les produits selon la catégorie sélectionnée ET le nom/description recherché
 function getFilteredProducts() {
   const term = searchTerm.trim().toLowerCase();
-  if (!term) return PRODUCTS;
-  return PRODUCTS.filter(p =>
-    p.name.toLowerCase().includes(term) ||
-    p.desc.toLowerCase().includes(term)
+  let list = currentCategory === 'all'
+    ? PRODUCTS
+    : PRODUCTS.filter(p => p.category === currentCategory);
+  if (term) {
+    list = list.filter(p =>
+      p.name.toLowerCase().includes(term) ||
+      p.desc.toLowerCase().includes(term)
+    );
+  }
+  return list;
+}
+
+// Appelée au clic sur une pastille de catégorie
+function selectCategory(catId) {
+  currentCategory = catId;
+  document.querySelectorAll('.category-pill').forEach(btn =>
+    btn.classList.toggle('active', btn.dataset.cat === catId)
   );
+  renderProducts();
+}
+
+function renderCategoryPills() {
+  const wrap = document.getElementById('category-filters');
+  if (!wrap) return;
+  wrap.innerHTML = CATEGORIES.map(c => `
+    <button class="category-pill${c.id === currentCategory ? ' active' : ''}" data-cat="${c.id}" onclick="selectCategory('${c.id}')">${c.label}</button>
+  `).join('');
 }
 
 // Appelée à chaque frappe dans la barre de recherche
@@ -2222,7 +2359,7 @@ function renderProducts() {
         <div class="product-name">${highlight(p.name, term)}</div>
         <div class="product-desc">${highlight(p.desc, term)}</div>
         <div class="product-footer">
-          <div class="product-price">${fmt(p.price)}</div>
+          <div class="product-price">${p.priceLabel || fmt(p.price)}</div>
           <button class="add-to-cart" onclick="event.stopPropagation(); addToCart(${p.id})">+ Ajouter</button>
         </div>
       </div>
@@ -2914,6 +3051,7 @@ window.addEventListener('online', updateOnlineStatus);
 window.addEventListener('offline', updateOnlineStatus);
 updateOnlineStatus();
 
+renderCategoryPills();
 renderProducts();
 updateCartCount();
 trackVisit();
