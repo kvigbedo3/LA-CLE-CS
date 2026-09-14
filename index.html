@@ -1,9 +1,28 @@
+<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Boutique de commerce générale LA CLE CS</title>
 <meta name="description" content="LA CLE CS - Boutique de commerce générale à Lomé. Électroménager, accessoires et articles du quotidien à prix imbattables. Commandez facilement et faites-vous livrer."/>
+<meta name="theme-color" content="#0e0e0e"/>
+
+<!-- Open Graph (aperçu du lien sur WhatsApp, Facebook...) -->
+<!-- IMPORTANT : remplace og:url et le domaine dans og:image par l'adresse réelle du site une fois en ligne -->
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="LA CLE CS"/>
+<meta property="og:title" content="LA CLE CS — Boutique de commerce générale à Lomé"/>
+<meta property="og:description" content="Électroménager, accessoires et articles du quotidien à prix imbattables. Commandez facilement et faites-vous livrer à Lomé."/>
+<meta property="og:image" content="https://www.laclecs.com/imagess/logo-la-cle-cs.png"/>
+<meta property="og:url" content="https://www.laclecs.com/"/>
+<meta property="og:locale" content="fr_FR"/>
+
+<!-- Twitter Card (même aperçu sur X/Twitter) -->
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="LA CLE CS — Boutique de commerce générale à Lomé"/>
+<meta name="twitter:description" content="Électroménager, accessoires et articles du quotidien à prix imbattables. Commandez facilement et faites-vous livrer à Lomé."/>
+<meta name="twitter:image" content="https://www.laclecs.com/imagess/logo-la-cle-cs.png"/>
+
 <link rel="icon" type="image/png" href="imagess/logo-la-cle-cs.png">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <!-- Firebase (base de données commandes/visites + authentification gestionnaire) -->
@@ -1500,12 +1519,12 @@
 <footer class="site-footer">
   <img src="imagess/logo-la-cle-cs.png" alt="Logo LA CLE CS"/>
   © 2026 LA CLE CS — Boutique de commerce générale. Tous droits réservés.
-  Designed by Emmanuel VIGBEDO !
-  <a href="https://wa.me/22870163374" target="_blank">
-    <br/>
+  <br/>
   <svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-7.4 7-12.5A7 7 0 0 0 5 9.5C5 14.6 12 22 12 22z"/><circle cx="12" cy="9.5" r="2.5"/></svg> Zossimé, Lomé-Togo
   <br/>
-    Téléphone / WhatsApp : <strong style="color:var(--gold)">+228 70 16 33 74</strong>
+  Designed by Emmanuel VIGBEDO !
+  <a href="https://wa.me/22870163374" target="_blank" style="color:var(--gold)">
+    <strong>+228 70 16 33 74</strong>
   </a>
 
   <div class="social-links">
@@ -2321,7 +2340,7 @@ function imgHTML(p, height = '220px') {
 
 // Miniature dans le panier
 function thumbHTML(p) {
-  if (p.image) {
+  if (p && p.image) {
     return `<div class="cart-item-thumb"><img src="${p.image}" alt="${p.name}"/></div>`;
   }
   return `<div class="cart-item-thumb"><div class="thumb-placeholder"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1 12.5H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></div></div>`;
@@ -2638,9 +2657,17 @@ function setStep(n) {
 function renderCartView() {
   const container = document.getElementById('cart-items');
   const summary = document.getElementById('cart-summary');
+
+  // Retire du panier les articles dont le produit n'existe plus
+  // (ex: produit supprimé ou remplacé côté gestion) pour éviter un plantage.
+  const validCartLength = cart.length;
+  cart = cart.filter(item => PRODUCTS.some(pr => pr.id === item.id));
+  if (cart.length !== validCartLength) saveCart();
+
   if (cart.length === 0) {
     container.innerHTML = `<div class="cart-empty"><div class="icon"><svg viewBox="0 0 24 24" width="1em" height="1em" style="vertical-align:-0.15em;flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M3 3h2l2.2 11.4a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 7H6"/></svg></div>Votre panier est vide</div>`;
     summary.style.display = 'none';
+    updateCartCount();
     return;
   }
   container.innerHTML = cart.map(item => {
